@@ -1,0 +1,145 @@
+/* ═══════════════════════════════════════════════════════════
+   ANIMATIONS.CSS — Keyframes & animated components
+   Funky Mobile Edition 🥒
+═══════════════════════════════════════════════════════════ */
+
+/* ── KEYFRAMES ────────────────────────────────────────────── */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(5px); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-8px); }
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-40px); opacity: 0; }
+}
+
+@keyframes swatchFlash {
+  0%   { opacity: 0.6; }
+  50%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes sweetSpotGlow {
+  from { box-shadow: 0 0 6px var(--relish), inset 0 0 6px rgba(200,230,58,0.1); }
+  to   { box-shadow: 0 0 24px var(--relish), inset 0 0 16px rgba(200,230,58,0.15); }
+}
+
+@keyframes bubbleRise {
+  0%   { transform: translateY(0) scale(1); opacity: 0.7; }
+  100% { transform: translateY(-60px) scale(0.4); opacity: 0; }
+}
+
+@keyframes jarShimmer {
+  0%,100% { opacity: 0.15; }
+  50%      { opacity: 0.35; }
+}
+
+@keyframes pulseGlow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(200, 230, 58, 0); }
+  50%      { box-shadow: 0 0 0 6px rgba(200, 230, 58, 0.25); }
+}
+
+@keyframes neonPulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.7; }
+}
+
+@keyframes bgPulse {
+  0%   { background-color: var(--relish); }
+  50%  { background-color: var(--dill-bright); }
+  100% { background-color: var(--relish); }
+}
+
+@keyframes shakeAnim {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+@keyframes pulseGreenAnim {
+  0% { box-shadow: 0 0 0 0 rgba(58, 206, 112, 0.7); }
+  70% { box-shadow: 0 0 0 20px rgba(58, 206, 112, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(58, 206, 112, 0); }
+}
+
+.shake-anim {
+  animation: shakeAnim 0.4s ease-in-out;
+}
+
+.pulse-green-anim {
+  animation: pulseGreenAnim 0.6s ease-out;
+}
+
+@keyframes tabPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2) rotate(-8deg); }
+  100% { transform: scale(1.15) translateY(-2px); }
+}
+
+/* ── PICKLE JAR SVG ANIMATION ─────────────────────────────── */
+.jar-brine {
+  transition: clip-path 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+  clip-path: inset(100% 0 0 0); /* starts empty */
+}
+
+.jar-cucumber {
+  transition: filter 1.5s ease;
+  filter: hue-rotate(0deg) saturate(1);
+}
+
+/* overflow: animate bubbles */
+.jar-overflow .jar-brine {
+  clip-path: inset(0% 0 0 0) !important;
+}
+
+/* Bubble particles */
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(200, 230, 58, 0.6);
+  animation: bubbleRise 1.2s ease-out forwards;
+  pointer-events: none;
+}
+
+/* ── STAGE INDICATOR DOT ──────────────────────────────────── */
+.stage-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--relish);
+  margin-right: 6px;
+  vertical-align: middle;
+  animation: pulseGlow 1.5s ease infinite;
+  box-shadow: 0 0 6px var(--relish);
+}
+
+/* ── NEON TEXT FLICKER ────────────────────────────────────── */
+.neon-text {
+  animation: neonPulse 2s ease-in-out infinite;
+  text-shadow: 0 0 10px var(--relish), 0 0 30px rgba(200,230,58,0.3);
+}
