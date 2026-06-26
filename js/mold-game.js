@@ -146,7 +146,7 @@
           goodCard.style.boxShadow = '3px 3px 0 var(--ink)';
         }
         if (window.piko && window.piko.react) {
-          window.piko.react('hating-it', 2200);
+          window.piko.react('hating-it', 3400);
         }
         tutorialStep = 1;
       } else {
@@ -162,14 +162,14 @@
           badCard.style.boxShadow = '3px 3px 0 var(--ink)';
         }
         if (window.piko && window.piko.react) {
-          window.piko.react('loving-it', 2200);
+          window.piko.react('loving-it', 3400);
         }
         tutorialStep = 0;
       }
     }
 
     runStep();
-    tutorialInterval = setInterval(runStep, 2500);
+    tutorialInterval = setInterval(runStep, 3500);
   }
 
   function stopTutorialLoop() {
@@ -234,80 +234,41 @@
   }
 
   function startInteractiveTutorial() {
-    enterArcadeMode();
-    overlay.style.display = 'none';
-    
-    if (window.piko && window.piko.setContext) {
-      window.piko.setContext('game-tutorial');
+    if (window.piko && window.piko.showTutorialCards) {
+      window.piko.showTutorialCards([
+        {
+          img: 'assets/piko/hating-it.png',
+          text: 'WHACK THESE! Tap them fast to earn points!',
+          items: ['🦠 Mold +10', '☁️ Kahm +25', '🌚 Black +15'],
+          btnText: 'Next 👉'
+        },
+        {
+          img: 'assets/piko/loving-it.png',
+          text: "DON'T WHACK! These are the good guys!",
+          items: ['🧫 Lacto', '🧄 Garlic', '🌿 Dill', '🧅 Scallion'],
+          btnText: 'Next 👉'
+        },
+        {
+          img: 'assets/piko/intro.png',
+          text: 'MYSTERY POWER-UPS! Play to find out what they do...',
+          items: ['🌊 ???', '🧊 ???'],
+          btnText: 'Next 👉'
+        },
+        {
+          img: 'assets/piko/panic.png',
+          text: '30 seconds! Protect my jar! Ready??',
+          items: [],
+          btnText: "LET'S GO! 🕹️"
+        }
+      ], () => {
+        startCountdown();
+      });
     }
-
-    const badCard = document.getElementById('mold-tut-bad-card');
-    const goodCard = document.getElementById('mold-tut-good-card');
-    const mascotEl = document.getElementById('piko-reaction-container');
-
-    function runTutorialStep(step) {
-      if (step === 0) {
-        if (badCard) {
-          badCard.style.transform = 'scale(1.1)';
-          badCard.style.borderColor = 'var(--rust)';
-          badCard.style.boxShadow = '0 0 16px var(--rust)';
-        }
-        if (goodCard) {
-          goodCard.style.transform = 'scale(1)';
-          goodCard.style.borderColor = '';
-          goodCard.style.boxShadow = '';
-        }
-        if (window.piko && window.piko.react) {
-          window.piko.react('hating-it');
-        }
-        if (window.piko && window.piko.say) {
-          window.piko.say('🦠 ' + window.i18n.t('mold.tut_bad') + ' ❌', [
-            { text: window.i18n.t('mold.got_it') + ' 👉', action: () => runTutorialStep(1) }
-          ]);
-        }
-      } else if (step === 1) {
-        if (goodCard) {
-          goodCard.style.transform = 'scale(1.1)';
-          goodCard.style.borderColor = 'var(--relish)';
-          goodCard.style.boxShadow = '0 0 16px var(--relish)';
-        }
-        if (badCard) {
-          badCard.style.transform = 'scale(1)';
-          badCard.style.borderColor = '';
-          badCard.style.boxShadow = '';
-        }
-        if (window.piko && window.piko.react) {
-          window.piko.react('loving-it');
-        }
-        if (window.piko && window.piko.say) {
-          window.piko.say('🧫 ' + window.i18n.t('mold.tut_good') + ' ❤️', [
-            { text: window.i18n.t('mold.start_game_tut') + ' ⚡', action: () => {
-              stopInteractiveTutorial();
-              startCountdown();
-            }}
-          ]);
-        }
-      }
-    }
-
-    runTutorialStep(0);
   }
 
   function stopInteractiveTutorial() {
     if (window.piko && window.piko.say) {
       window.piko.say('');
-    }
-    const badCard = document.getElementById('mold-tut-bad-card');
-    const goodCard = document.getElementById('mold-tut-good-card');
-    if (badCard) {
-      badCard.style.transform = '';
-      badCard.style.borderColor = '';
-      badCard.style.boxShadow = '';
-    }
-    if (goodCard) {
-      goodCard.style.transform = '';
-      goodCard.style.borderColor = '';
-      goodCard.style.boxShadow = '';
     }
   }
 

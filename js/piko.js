@@ -355,7 +355,62 @@
     }
   }
 
-  window.piko = { react, setContext, speech, clearSpeech, startGuidedWalkthrough, showCelebrationModal, say };
+  // ── Tutorial Cards (reusable modal card sequence) ─────────
+  function showTutorialCards(cards, onComplete) {
+    let tutModal = document.getElementById('piko-tutorial-cards-modal');
+    let stepIdx = 0;
+
+    function renderStep() {
+      const card = cards[stepIdx];
+      const isLast = stepIdx === cards.length - 1;
+
+      if (!tutModal) {
+        tutModal = document.createElement('div');
+        tutModal.id = 'piko-tutorial-cards-modal';
+        tutModal.className = 'wisdom-modal-overlay';
+        document.body.appendChild(tutModal);
+      }
+
+      tutModal.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:var(--gap-sm); padding:var(--gap-lg); max-width:340px;">
+          <img src="${card.img}" style="width:150px; height:150px; object-fit:contain;" />
+          <div class="piko-speech-bubble" style="max-width:300px; font-size:14px;">${card.text}</div>
+          ${card.items ? `<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:var(--gap-xs) 0;">${card.items.map(item =>
+            `<div style="background:var(--bg-surface); border:2px solid var(--ink); border-radius:var(--radius-md); padding:4px 8px; font-size:12px; font-weight:700; box-shadow:2px 2px 0 var(--ink);">${item}</div>`
+          ).join('')}</div>` : ''}
+          <button id="piko-tut-card-next" style="background:var(--relish); color:var(--bg); border:2px solid var(--ink); border-radius:var(--radius-md); padding:8px 20px; font-family:var(--font-display); font-weight:700; font-size:14px; cursor:pointer; box-shadow:3px 3px 0 var(--ink); pointer-events:auto;">
+            ${card.btnText}
+          </button>
+        </div>
+      `;
+
+      tutModal.classList.add('is-active');
+
+      setTimeout(() => {
+        const btn = document.getElementById('piko-tut-card-next');
+        if (btn) {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            stepIdx++;
+            if (stepIdx >= cards.length) {
+              tutModal.classList.remove('is-active');
+              setTimeout(() => {
+                tutModal.remove();
+                tutModal = null;
+                if (onComplete) onComplete();
+              }, 300);
+            } else {
+              renderStep();
+            }
+          };
+        }
+      }, 50);
+    }
+
+    renderStep();
+  }
+
+  window.piko = { react, setContext, speech, clearSpeech, startGuidedWalkthrough, showCelebrationModal, showTutorialCards, say };
 
   // Initial boot coordinate selector
   window.addEventListener('load', () => {

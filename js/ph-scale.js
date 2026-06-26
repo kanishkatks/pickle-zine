@@ -162,80 +162,41 @@
   }
 
   function startInteractiveTutorial() {
-    enterArcadeMode();
-    overlay.style.display = 'none';
-    
-    if (window.piko && window.piko.setContext) {
-      window.piko.setContext('game-tutorial');
+    if (window.piko && window.piko.showTutorialCards) {
+      window.piko.showTutorialCards([
+        {
+          img: 'assets/piko/extreme-sour.png',
+          text: 'LOW pH = MORE SOUR! Lemons, pickles, stomach acid...',
+          items: ['🍋 Lemon pH 2', '🥒 Pickle pH 3.5', '☕ Coffee pH 5'],
+          btnText: 'Next 👉'
+        },
+        {
+          img: 'assets/piko/opposite-sour.png',
+          text: 'HIGH pH = LESS SOUR! Soap, bleach, baking soda...',
+          items: ['🧼 Soap pH 10', '🥚 Egg pH 8', '🧽 Cleaner pH 14'],
+          btnText: 'Next 👉'
+        },
+        {
+          img: 'assets/piko/intro.png',
+          text: 'Compare everything to PURE WATER at pH 7.0 — is it MORE or LESS sour?',
+          items: ['💧 Water = pH 7.0'],
+          btnText: 'Next 👉'
+        },
+        {
+          img: 'assets/piko/panic.png',
+          text: '60 seconds! How many can you guess? GO FAST!',
+          items: [],
+          btnText: "LET'S GO! ⚡"
+        }
+      ], () => {
+        startBlitz();
+      });
     }
-
-    const pointer = document.getElementById('ph-scale-pointer');
-    const labelAcid = document.getElementById('ph-label-acid');
-    const labelNeutral = document.getElementById('ph-label-neutral');
-    const labelAlk = document.getElementById('ph-label-alk');
-    const feedbackText = document.getElementById('ph-scale-feedback-text');
-
-    function runTutorialStep(step) {
-      if (step === 0) {
-        if (pointer) pointer.style.left = '15%';
-        if (labelAcid) labelAcid.style.transform = 'scale(1.2)';
-        if (labelNeutral) labelNeutral.style.transform = 'scale(1)';
-        if (labelAlk) labelAlk.style.transform = 'scale(1)';
-        if (feedbackText) {
-          feedbackText.textContent = '🍋 pH 3.0: Puckering & Acidic!';
-          feedbackText.style.color = 'var(--rust)';
-        }
-        if (window.piko && window.piko.react) {
-          window.piko.react('extreme-sour');
-        }
-        if (window.piko && window.piko.say) {
-          window.piko.say('🍋 ' + window.i18n.t('ph.tut_acid') + ' 🍋', [
-            { text: window.i18n.t('mold.got_it') + ' 👉', action: () => runTutorialStep(1) }
-          ]);
-        }
-      } else if (step === 1) {
-        if (pointer) pointer.style.left = '85%';
-        if (labelAlk) labelAlk.style.transform = 'scale(1.2)';
-        if (labelAcid) labelAcid.style.transform = 'scale(1)';
-        if (labelNeutral) labelNeutral.style.transform = 'scale(1)';
-        if (feedbackText) {
-          feedbackText.textContent = '🫧 pH 10.0: Soapy & Alkaline!';
-          feedbackText.style.color = '#5f4bff';
-        }
-        if (window.piko && window.piko.react) {
-          window.piko.react('opposite-sour');
-        }
-        if (window.piko && window.piko.say) {
-          window.piko.say('🫧 ' + window.i18n.t('ph.tut_alkaline') + ' 🫧', [
-            { text: window.i18n.t('ph.start_blitz') + ' ⚡', action: () => {
-              stopInteractiveTutorial();
-              startBlitz();
-            }}
-          ]);
-        }
-      }
-    }
-
-    runTutorialStep(0);
   }
 
   function stopInteractiveTutorial() {
     if (window.piko && window.piko.say) {
       window.piko.say('');
-    }
-    const pointer = document.getElementById('ph-scale-pointer');
-    const labelAcid = document.getElementById('ph-label-acid');
-    const labelNeutral = document.getElementById('ph-label-neutral');
-    const labelAlk = document.getElementById('ph-label-alk');
-    const feedbackText = document.getElementById('ph-scale-feedback-text');
-
-    if (pointer) pointer.style.left = '50%';
-    if (labelAcid) labelAcid.style.transform = '';
-    if (labelNeutral) labelNeutral.style.transform = '';
-    if (labelAlk) labelAlk.style.transform = '';
-    if (feedbackText) {
-      feedbackText.textContent = window.i18n.t('ph.tasting_spectra');
-      feedbackText.style.color = '';
     }
   }
 
@@ -445,7 +406,7 @@
           labelAlk.style.fontWeight = '';
         }
         if (window.piko && window.piko.react) {
-          window.piko.react('extreme-sour', 2200);
+          window.piko.react('extreme-sour', 3400);
         }
         tutorialStep = 1;
       } else if (tutorialStep === 1) {
@@ -468,7 +429,7 @@
           labelNeutral.style.fontWeight = '';
         }
         if (window.piko && window.piko.react) {
-          window.piko.react('opposite-sour', 2200);
+          window.piko.react('opposite-sour', 3400);
         }
         tutorialStep = 2;
       } else {
@@ -491,14 +452,14 @@
           labelAlk.style.fontWeight = '';
         }
         if (window.piko && window.piko.react) {
-          window.piko.react('idle', 2200);
+          window.piko.react('idle', 3400);
         }
         tutorialStep = 0;
       }
     }
 
     runStep();
-    tutorialInterval = setInterval(runStep, 2500);
+    tutorialInterval = setInterval(runStep, 3500);
   }
 
   function stopTutorialLoop() {
