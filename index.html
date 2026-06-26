@@ -120,26 +120,20 @@
     ═══════════════════════════════════════════════════════ -->
     <section class="page" id="page-home" data-page="home" role="tabpanel">
       
-      <div class="heading-block neo-brutalist">
-        <div class="page-title">
-          <p class="page-title__tag" data-i18n="html.start_here">Start Here</p>
-          <h2 class="page-title__name" data-i18n="html.pick_game" style="margin-top:8px;">Pick a Game!</h2>
-          <p class="page-title__desc" data-i18n="html.pick_desc">Choose one of our fun pickle activities below to get started.</p>
-        </div>
-      </div>
+      <h2 data-i18n="html.pick_game" style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--ink); margin-bottom:var(--gap-sm); text-shadow:2px 2px 0 var(--brine-muted);">Pick a Game!</h2>
 
       <div class="home-grid">
         
         <!-- Whack-A-Mold Card -->
         <div class="home-tool-card neo-brutalist" tabindex="0" role="button" onclick="document.querySelector('[data-tab=\'vinegar\']').click()">
-          <div class="home-tool-card__img" style="font-size: 5rem; display: flex; align-items: center; justify-content: center; background: var(--mustard); height: 160px;">🦠</div>
+          <img class="home-tool-card__img" src="assets/cartoon-mold.png" alt="Whack-A-Mold" style="height:100px; width:100%; object-fit:contain; border-radius:var(--radius-md);" />
           <h3 class="home-tool-card__title" data-i18n="html.mold_name">Whack-A-Mold</h3>
           <p class="home-tool-card__desc" data-i18n="html.mold_desc">Protect the jar! Tap the fuzzy mold before it spreads!</p>
         </div>
 
         <!-- Sourness Scale Card -->
         <div class="home-tool-card neo-brutalist" tabindex="0" role="button" onclick="document.querySelector('[data-tab=\'ph-scale\']').click()">
-          <div class="home-tool-card__img" style="font-size: 5rem; display: flex; align-items: center; justify-content: center; background: var(--relish); height: 160px;">⚡</div>
+          <img class="home-tool-card__img" src="assets/sour-blitz-cartoon.png" alt="Sour Blitz" style="height:100px; width:100%; object-fit:contain; border-radius:var(--radius-md);" />
           <h3 class="home-tool-card__title" data-i18n="html.blitz_name">Sour Blitz</h3>
           <p class="home-tool-card__desc" data-i18n="html.blitz_desc">How fast can you spot the sour? Hit the leaderboard!</p>
         </div>
@@ -336,11 +330,16 @@
         </div>
       </div> <!-- End Tool Workspace Card -->
 
-      <!-- GLOBAL LEADERBOARD -->
-      <div class="result-block-highlight" style="display:block; margin-top:var(--gap-lg);">
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         PAGE: LEADERBOARD
+    ═══════════════════════════════════════════════════════ -->
+    <section class="page" id="page-leaderboard" data-page="leaderboard" role="tabpanel">
+      <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--ink); margin-bottom:var(--gap-sm); text-shadow:2px 2px 0 var(--brine-muted);">🌍 <span data-i18n="ph.leaderboard">Global Leaderboard</span></h2>
+      <div class="result-block-highlight" style="display:block;">
         <div class="ph-readout neo-brutalist-inner" style="border:2px solid var(--ink); box-shadow:none; background:var(--mustard);">
-          <div style="grid-column: 1 / -1; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:12px;">
-            <h3 style="font-family:var(--font-display); font-size:1.4rem; font-weight:800; color:var(--ink); margin:0;">🌍 <span data-i18n="ph.leaderboard">Global Leaderboard</span></h3>
+          <div style="grid-column: 1 / -1; display:flex; justify-content:flex-end; align-items:center; padding-bottom:8px; margin-bottom:12px; border-bottom:2px solid var(--ink);">
             <button id="btn-refresh-leaderboard" class="bttn-stretch bttn-sm" style="background:var(--bg); color:var(--ink); padding:4px 8px; font-size:10px;">🔄 <span data-i18n="ph.refresh">Refresh</span></button>
           </div>
           <div id="leaderboard-list" style="grid-column: 1 / -1; width:100%; font-family:var(--font-mono); font-size:14px; line-height:1.8;">
@@ -350,17 +349,24 @@
       </div>
     </section>
 
+    <!-- ════════════════════════════════════════════════════
+         PAGE: WISDOM
+    ═══════════════════════════════════════════════════════ -->
+    <section class="page" id="page-wisdom" data-page="wisdom-tab" role="tabpanel">
+      <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--ink); margin-bottom:var(--gap-sm); text-shadow:2px 2px 0 var(--brine-muted);">📖 <span data-i18n="html.wisdom_btn">Brine Wisdom</span></h2>
+      <p style="color:var(--ink-muted); font-size:13px; margin-bottom:var(--gap-md);">Fun facts about pickles and science!</p>
+      <button class="bttn-unite bttn-md custom-btn-wisdom neo-btn-shadow" id="wisdom-btn" style="width:100%; max-width:280px; margin:0 auto;">
+        📖 <span data-i18n="html.wisdom_btn">Reveal Brine Wisdom</span>
+      </button>
+    </section>
+
   </div><!-- /pages-container -->
 
   <!-- ══════════════════════════════════════════════════════
        FOOTER — BRINE WISDOM
   ═══════════════════════════════════════════════════════ -->
-  <footer class="site-footer neo-brutalist-footer" style="padding: 16px var(--gap-lg); display: flex; flex-direction: column; gap: var(--gap-xs); align-items: center; justify-content: center;">
-    <button class="bttn-unite bttn-sm custom-btn-wisdom neo-btn-shadow" id="wisdom-btn" style="margin: 0 auto; width: 100%; max-width: 280px; pointer-events: auto;">
-      📖 <span data-i18n="html.wisdom_btn">Reveal Brine Wisdom</span>
-    </button>
-    
-    <p class="site-footer__copy" style="margin-top: var(--gap-xs); font-size: 10px;">
+  <footer class="site-footer neo-brutalist-footer" style="padding: 8px var(--gap-md); text-align:center;">
+    <p class="site-footer__copy" style="font-size: 10px;">
       © Kanishk et al. &nbsp;·&nbsp; ZINE JUNE 26
     </p>
   </footer>
@@ -371,15 +377,15 @@
   <nav class="tab-nav neo-brutalist-nav" role="tablist" aria-label="Tool Navigation">
     <button class="tab-nav__btn is-active" data-tab="home" role="tab" aria-controls="page-home">
       <div class="tab-nav__btn-icon" style="font-size:1.2rem;">🥒</div>
-      <span class="tab-nav__btn-label" data-i18n="html.tab_hub">Hub</span>
+      <span class="tab-nav__btn-label">Hub</span>
     </button>
-    <button class="tab-nav__btn" data-tab="vinegar" role="tab" aria-controls="page-vinegar">
-      <div class="tab-nav__btn-icon" style="font-size:1.2rem;">🦠</div>
-      <span class="tab-nav__btn-label" data-i18n="html.tab_mold">Mold</span>
+    <button class="tab-nav__btn" data-tab="leaderboard" role="tab" aria-controls="page-leaderboard">
+      <div class="tab-nav__btn-icon" style="font-size:1.2rem;">🏆</div>
+      <span class="tab-nav__btn-label">Scores</span>
     </button>
-    <button class="tab-nav__btn" data-tab="ph-scale" role="tab" aria-controls="page-ph-scale">
-      <div class="tab-nav__btn-icon" style="font-size:1.2rem;">⚡</div>
-      <span class="tab-nav__btn-label" data-i18n="html.tab_blitz">Blitz</span>
+    <button class="tab-nav__btn" data-tab="wisdom-tab" role="tab" aria-controls="page-wisdom">
+      <div class="tab-nav__btn-icon" style="font-size:1.2rem;">📖</div>
+      <span class="tab-nav__btn-label">Wisdom</span>
     </button>
   </nav>
 
