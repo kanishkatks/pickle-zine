@@ -4,7 +4,7 @@
 ═══════════════════════════════════════════════════════════ */
 
 const SUPABASE_URL = 'https://puvpullnnkykgvacemff.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_8etMVTVEB0T6wjco8F9Usg_kPm-A1_q';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1dnB1bGxubmt5a2d2YWNlbWZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTE2MTAsImV4cCI6MjA5MzgyNzYxMH0.atOYnNnjHu6C5tgvgOxyVMCmnVO0w_IyWYv3HXeLb38';
 
 // Initialize the Supabase Client (gracefully handle missing CDN or bad URL)
 try {
