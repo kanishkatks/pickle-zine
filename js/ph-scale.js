@@ -7,7 +7,7 @@
 
   /* ── GAME DATA ──────────────────────────────────────────── */
   const BASE_PH = 7.0; // Pure Water
-  const BLITZ_SECONDS = 60;
+  const BLITZ_SECONDS = 30;
 
   // A massive library of funky, weird, and everyday items
   const GAME_ITEMS = [

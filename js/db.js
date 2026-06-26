@@ -94,17 +94,11 @@ async function fetchLeaderboard() {
       return remoteData || defaultSeeds;
     }
     
-    // Merge remote and local, keep best score per player
+    // Merge all remote and local scores, allow duplicates
     if (remoteData) {
       const merged = [...remoteData, ...localScores];
-      const best = {};
-      for (const item of merged) {
-        if (!best[item.player_name] || item.score > best[item.player_name].score) {
-          best[item.player_name] = item;
-        }
-      }
-      const sorted = Object.values(best).sort((a, b) => b.score - a.score);
-      return sorted.slice(0, 10);
+      merged.sort((a, b) => b.score - a.score);
+      return merged.slice(0, 10);
     }
 
     return localScores.sort((a, b) => b.score - a.score).slice(0, 10);
