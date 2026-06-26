@@ -645,18 +645,21 @@ body.is-locked {
   opacity: 1;
 }
 
-/* 3. Game Tutorial Guide State */
+/* 3. Game Tutorial Guide State — in-flow inside overlay */
 .piko-context-game-tutorial {
-  top: 320px;
+  position: relative !important;
+  top: auto;
+  left: auto;
   bottom: auto;
-  left: 50%;
   right: auto;
-  width: 130px;
-  height: 130px;
-  --piko-tx: -50%;
-  --piko-base-transform: translateX(-50%) rotate(0deg);
-  transform: var(--piko-base-transform);
+  width: 80px;
+  height: 80px;
+  overflow: visible;
   opacity: 1;
+  pointer-events: none;
+  filter: none;
+  --piko-base-transform: none;
+  transform: none;
 }
 
 /* 4. Game Active Timer State */
