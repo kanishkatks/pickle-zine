@@ -94,23 +94,20 @@ async function fetchLeaderboard() {
       return remoteData || defaultSeeds;
     }
     
-    // Merge remote and local unique values if remote exists, otherwise return local
+    // Merge remote and local, keep best score per player
     if (remoteData) {
       const merged = [...remoteData, ...localScores];
-      // remove duplicates by name
-      const unique = [];
-      const seen = new Set();
+      const best = {};
       for (const item of merged) {
-        if (!seen.has(item.player_name)) {
-          seen.add(item.player_name);
-          unique.push(item);
+        if (!best[item.player_name] || item.score > best[item.player_name].score) {
+          best[item.player_name] = item;
         }
       }
-      unique.sort((a, b) => b.score - a.score);
-      return unique.slice(0, 10);
+      const sorted = Object.values(best).sort((a, b) => b.score - a.score);
+      return sorted.slice(0, 10);
     }
-    
-    return localScores;
+
+    return localScores.sort((a, b) => b.score - a.score).slice(0, 10);
   } catch (err) {
     console.error("Leaderboard fallback failure:", err);
     return [];

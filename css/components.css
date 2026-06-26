@@ -662,18 +662,10 @@ body.is-locked {
   transform: none;
 }
 
-/* 4. Game Active Timer State */
+/* 4. Game Active Timer State — hidden during gameplay */
 .piko-context-game-active {
-  top: 120px;
-  bottom: auto;
-  left: auto;
-  right: calc(50% - 215px + 24px);
-  width: 100px;
-  height: 100px;
-  --piko-tx: 0%;
-  --piko-base-transform: translateY(0) rotate(0deg);
-  transform: var(--piko-base-transform);
-  opacity: 1;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* 5. Wisdom Overlay Center State */
@@ -959,21 +951,23 @@ body.is-locked {
   align-items: center !important;
 }
 
-/* Floating top-right Exit Arcade Button */
+/* Exit Arcade Button — bottom-left, out of the way */
 .bttn-exit-arcade {
-  position: absolute !important;
-  top: 16px !important;
-  right: 16px !important;
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 16px !important;
+  top: auto !important;
+  right: auto !important;
   z-index: 10010 !important;
-  background: var(--rust) !important;
-  color: var(--bg) !important;
-  border: 2px solid var(--ink) !important;
+  background: var(--bg-raised) !important;
+  color: var(--ink-muted) !important;
+  border: 1px solid var(--ink-muted) !important;
   font-weight: bold !important;
   text-transform: uppercase !important;
-  font-size: 11px !important;
+  font-size: 10px !important;
   font-family: var(--font-mono) !important;
-  padding: 6px 12px !important;
-  box-shadow: 3px 3px 0 var(--ink) !important;
+  padding: 4px 10px !important;
+  box-shadow: 2px 2px 0 var(--brine-muted) !important;
   border-radius: var(--radius-sm) !important;
   cursor: pointer !important;
   pointer-events: auto !important;
