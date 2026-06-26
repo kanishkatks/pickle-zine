@@ -94,14 +94,16 @@ async function fetchLeaderboard() {
       return remoteData || defaultSeeds;
     }
     
-    // Merge all remote and local scores, allow duplicates
-    if (remoteData) {
-      const merged = [...remoteData, ...localScores];
-      merged.sort((a, b) => b.score - a.score);
-      return merged.slice(0, 10);
+    // Merge remote and local, sum scores per initials
+    const all = remoteData ? [...remoteData, ...localScores] : [...localScores];
+    const totals = {};
+    for (const item of all) {
+      if (!totals[item.player_name]) {
+        totals[item.player_name] = { player_name: item.player_name, score: 0 };
+      }
+      totals[item.player_name].score += item.score;
     }
-
-    return localScores.sort((a, b) => b.score - a.score).slice(0, 10);
+    return Object.values(totals).sort((a, b) => b.score - a.score).slice(0, 10);
   } catch (err) {
     console.error("Leaderboard fallback failure:", err);
     return [];

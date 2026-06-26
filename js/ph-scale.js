@@ -258,8 +258,8 @@
     emojiDisplay.textContent = "🏁";
     nameDisplay.textContent = window.i18n.t('ph.game_over');
 
-    const celebImg = score >= 300 ? 'assets/piko/celebrate.png' : 'assets/piko/denied.png';
-    const celebText = score >= 300 ? "Time's Up! Great taste!" : "Time's Up! Keep practicing!";
+    const celebImg = score > 0 ? 'assets/piko/celebrate.png' : 'assets/piko/denied.png';
+    const celebText = score > 0 ? "Time's Up! Great taste!" : "Time's Up! Keep practicing!";
 
     if (window.piko && window.piko.showTutorialCards) {
       window.piko.showTutorialCards([{
@@ -295,14 +295,6 @@
       if (btnExitBlitzArcade) btnExitBlitzArcade.style.display = 'block';
     }
 
-    setTimeout(() => {
-      const hash = window.location.hash.replace('#', '') || 'home';
-      const workspaceCard = document.querySelector('#ph-scale .tool-workspace-card');
-      const isArcade = workspaceCard && workspaceCard.classList.contains('is-arcade-active');
-      if (!isPlaying && hash === 'ph-scale' && !isArcade) {
-        startTutorialLoop();
-      }
-    }, 5200);
   }
 
   function nextItem() {

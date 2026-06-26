@@ -492,8 +492,8 @@
     });
 
     // Show score celebration modal
-    const celebImg = score >= 100 ? 'assets/piko/celebrate.png' : 'assets/piko/denied.png';
-    const celebText = score >= 100 ? 'Jar Saved! Amazing!' : 'The mold won this time...';
+    const celebImg = score > 0 ? 'assets/piko/celebrate.png' : 'assets/piko/denied.png';
+    const celebText = score > 0 ? 'Jar Saved! Amazing!' : 'The mold won this time...';
 
     if (window.piko && window.piko.showTutorialCards) {
       window.piko.showTutorialCards([{
@@ -523,15 +523,6 @@
       if (btnExitMoldArcade) btnExitMoldArcade.style.display = 'block';
     }
 
-    // After celebration completes, resume attract-mode loop if still on this tab and not in arcade mode
-    setTimeout(() => {
-      const hash = window.location.hash.replace('#', '') || 'home';
-      const workspaceCard = document.querySelector('#vinegar .tool-workspace-card');
-      const isArcade = workspaceCard && workspaceCard.classList.contains('is-arcade-active');
-      if (!isPlaying && hash === 'vinegar' && !isArcade) {
-        startTutorialLoop();
-      }
-    }, 5200);
   }
 
   init();
