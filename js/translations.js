@@ -8,7 +8,7 @@
     en: {
       // ── Auth Gate ──────────────────────────────────────────
       'auth.title':        'Zine Access Only',
-      'auth.desc':         'Enter the Secret Access Code printed inside your physical copy of The Global Pickle Zine.',
+      'auth.desc':         'Enter the Secret Access Code printed inside your copy of the zine.',
       'auth.secret_code':  'Secret Code',
       'auth.placeholder':  'Enter code here...',
       'auth.unlock_btn':   'Unlock App',
@@ -109,7 +109,7 @@
     nl: {
       // ── Auth Gate ──────────────────────────────────────────
       'auth.title':        'Alleen met Zine Toegang',
-      'auth.desc':         'Voer de geheime toegangscode in die in je exemplaar van The Global Pickle Zine staat.',
+      'auth.desc':         'Voer de geheime toegangscode in die in je exemplaar van de zine staat.',
       'auth.secret_code':  'Geheime Code',
       'auth.placeholder':  'Voer code in...',
       'auth.unlock_btn':   'App Ontgrendelen',
