@@ -184,7 +184,7 @@
         },
         {
           img: 'assets/piko/panic.png',
-          text: '60 seconds! How many can you guess? GO FAST!',
+          text: '30 seconds! How many can you guess? GO FAST!',
           items: [],
           btnText: "LET'S GO! ⚡"
         }

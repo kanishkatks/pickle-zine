@@ -64,7 +64,7 @@
 
       // ── pH / Sour Blitz ───────────────────────────────────
       'ph.title':         'Sour Blitz!',
-      'ph.desc':          'You have 60 seconds to guess if funky items are MORE or LESS sour than Pure Water. Go fast!',
+      'ph.desc':          'You have 30 seconds to guess if funky items are MORE or LESS sour than Pure Water. Go fast!',
       'ph.start':         'Start Game!',
       'ph.tutorial':      'Play Tutorial!',
       'ph.times_up':      "Time's Up!",
@@ -165,7 +165,7 @@
 
       // ── pH / Sour Blitz ───────────────────────────────────
       'ph.title':         'Zuurtest Blitz!',
-      'ph.desc':          'Je hebt 60 seconden om te raden of gekke items ZUURDER of MINDER ZUUR zijn dan puur water. Snel!',
+      'ph.desc':          'Je hebt 30 seconden om te raden of gekke items ZUURDER of MINDER ZUUR zijn dan puur water. Snel!',
       'ph.start':         'Start Spel!',
       'ph.tutorial':      'Bekijk Uitleg!',
       'ph.times_up':      'Tijd is om!',
