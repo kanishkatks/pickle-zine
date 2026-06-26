@@ -81,7 +81,7 @@
             btnSubmitScore.textContent = window.i18n.t('mold.submit');
           }, 1500);
         } else {
-          btnSubmitScore.textContent = '❌ Error';
+          btnSubmitScore.textContent = '❌ ' + window.i18n.t('mold.error');
           btnSubmitScore.disabled = false;
         }
       } else {
@@ -105,6 +105,9 @@
       }
     } else {
       stopTutorialLoop();
+      if (isPlaying) {
+        endGame();
+      }
     }
   }
 
@@ -202,6 +205,9 @@
   }
 
   function exitArcadeMode() {
+    if (window.piko && window.piko.say) {
+      window.piko.say('');
+    }
     isPlaying = false;
     clearInterval(gameTimer);
     clearInterval(drainInterval);

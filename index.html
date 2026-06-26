@@ -120,24 +120,34 @@
     ═══════════════════════════════════════════════════════ -->
     <section class="page" id="page-home" data-page="home" role="tabpanel">
       
-      <h2 data-i18n="html.pick_game" style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--ink); margin-bottom:var(--gap-sm); text-shadow:2px 2px 0 var(--brine-muted);">Pick a Game!</h2>
+      <div class="heading-block neo-brutalist" style="flex:1; justify-content:center;">
+        <h2 data-i18n="html.pick_game" style="font-family:var(--font-display); font-size:1.8rem; font-weight:800; color:var(--ink); margin-bottom:var(--gap-sm); text-shadow:2px 2px 0 var(--brine-muted);">Pick a Game!</h2>
 
       <div class="home-grid">
         
         <!-- Whack-A-Mold Card -->
         <div class="home-tool-card neo-brutalist" tabindex="0" role="button" onclick="document.querySelector('[data-tab=\'vinegar\']').click()">
-          <img class="home-tool-card__img" src="assets/cartoon-mold.png" alt="Whack-A-Mold" style="height:100px; width:100%; object-fit:contain; border-radius:var(--radius-md);" />
-          <h3 class="home-tool-card__title" data-i18n="html.mold_name">Whack-A-Mold</h3>
-          <p class="home-tool-card__desc" data-i18n="html.mold_desc">Protect the jar! Tap the fuzzy mold before it spreads!</p>
+          <img class="home-tool-card__img" src="assets/cartoon-mold.png" alt="Whack-A-Mold" style="width:110px; height:110px; object-fit:contain; flex-shrink:0; border-radius:var(--radius-md);" />
+          <div>
+            <h3 class="home-tool-card__title" data-i18n="html.mold_name">Whack-A-Mold</h3>
+            <p class="home-tool-card__desc" data-i18n="html.mold_desc">Protect the jar! Tap the fuzzy mold before it spreads!</p>
+          </div>
         </div>
 
         <!-- Sourness Scale Card -->
         <div class="home-tool-card neo-brutalist" tabindex="0" role="button" onclick="document.querySelector('[data-tab=\'ph-scale\']').click()">
-          <img class="home-tool-card__img" src="assets/sour-blitz-cartoon.png" alt="Sour Blitz" style="height:100px; width:100%; object-fit:contain; border-radius:var(--radius-md);" />
-          <h3 class="home-tool-card__title" data-i18n="html.blitz_name">Sour Blitz</h3>
-          <p class="home-tool-card__desc" data-i18n="html.blitz_desc">How fast can you spot the sour? Hit the leaderboard!</p>
+          <img class="home-tool-card__img" src="assets/sour-blitz-cartoon.png" alt="Sour Blitz" style="width:110px; height:110px; object-fit:contain; flex-shrink:0; border-radius:var(--radius-md);" />
+          <div>
+            <h3 class="home-tool-card__title" data-i18n="html.blitz_name">Sour Blitz</h3>
+            <p class="home-tool-card__desc" data-i18n="html.blitz_desc">How fast can you spot the sour? Hit the leaderboard!</p>
+          </div>
         </div>
 
+      </div>
+
+      <button class="bttn-unite bttn-sm custom-btn-wisdom neo-btn-shadow" id="wisdom-btn-hub" onclick="document.getElementById('wisdom-btn').click()" style="width:100%; max-width:280px; margin:0 auto; margin-top:var(--gap-md);">
+        📖 <span data-i18n="html.wisdom_btn">Reveal Brine Wisdom</span>
+      </button>
       </div>
     </section>
 

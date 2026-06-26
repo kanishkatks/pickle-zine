@@ -131,6 +131,9 @@
   }
 
   function exitArcadeMode() {
+    if (window.piko && window.piko.say) {
+      window.piko.say('');
+    }
     isPlaying = false;
     clearInterval(timerInterval);
     
@@ -231,7 +234,7 @@
     if (labelNeutral) labelNeutral.style.transform = '';
     if (labelAlk) labelAlk.style.transform = '';
     if (feedbackText) {
-      feedbackText.textContent = 'TASTING SPECTRA...';
+      feedbackText.textContent = window.i18n.t('ph.tasting_spectra');
       feedbackText.style.color = '';
     }
   }
@@ -531,7 +534,7 @@
       labelAlk.style.fontWeight = '';
     }
     if (feedbackText) {
-      feedbackText.textContent = 'TASTING SPECTRA...';
+      feedbackText.textContent = window.i18n.t('ph.tasting_spectra');
       feedbackText.style.color = '';
     }
   }
@@ -545,6 +548,9 @@
       }
     } else {
       stopTutorialLoop();
+      if (isPlaying) {
+        endGame();
+      }
     }
   }
 

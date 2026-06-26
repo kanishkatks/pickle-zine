@@ -60,6 +60,7 @@
       'mold.submitting':     'Submitting...',
       'mold.submitted':      'Submitted!',
       'mold.initials_error': 'Please enter 3 initials!',
+      'mold.error':          'Error',
 
       // ── pH / Sour Blitz ───────────────────────────────────
       'ph.title':         'Sour Blitz!',
@@ -85,6 +86,7 @@
       'ph.saving':        'Saving...',
       'ph.submit_score':  'Submit Score',
       'ph.enter_initials':'Enter your initials (3 letters):',
+      'ph.tasting_spectra':'TASTING SPECTRA...',
 
       // ── HTML / Layout ──────────────────────────────────────
       'html.start_here':  'Start Here',
@@ -159,6 +161,7 @@
       'mold.submitting':     'Versturen...',
       'mold.submitted':      'Verstuurd!',
       'mold.initials_error': 'Voer 3 initialen in!',
+      'mold.error':          'Fout',
 
       // ── pH / Sour Blitz ───────────────────────────────────
       'ph.title':         'Zuurtest Blitz!',
@@ -184,6 +187,7 @@
       'ph.saving':        'Opslaan...',
       'ph.submit_score':  'Score Versturen',
       'ph.enter_initials':'Voer je initialen in (3 letters):',
+      'ph.tasting_spectra':'PROEFSPECTRUM...',
 
       // ── HTML / Layout ──────────────────────────────────────
       'html.start_here':  'Begin Hier',
