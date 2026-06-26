@@ -177,7 +177,7 @@
           btnText: 'Next 👉'
         },
         {
-          img: 'assets/piko/intro.png',
+          img: 'assets/piko/base.png',
           text: 'Compare everything to PURE WATER at pH 7.0 — is it MORE or LESS sour?',
           items: ['💧 Water = pH 7.0'],
           btnText: 'Next 👉'

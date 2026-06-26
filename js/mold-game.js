@@ -249,7 +249,7 @@
           btnText: 'Next 👉'
         },
         {
-          img: 'assets/piko/intro.png',
+          img: 'assets/piko/base.png',
           text: 'MYSTERY POWER-UPS! Play to find out what they do...',
           items: ['🌊 ???', '🧊 ???'],
           btnText: 'Next 👉'
