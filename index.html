@@ -192,9 +192,9 @@
           <p id="mold-overlay-score" style="font-size:2.5rem; font-weight:bold; color:var(--rust); display:none; margin-bottom:var(--gap-sm); line-height:1;">0</p>
 
           <div id="mold-arcade-name-entry" style="display:none; margin-bottom:var(--gap-sm); width:100%;">
-            <label for="mold-arcade-name" data-i18n="mold.enter_initials" style="display:block; font-size:11px; color:var(--ink); margin-bottom:4px; font-weight:bold;">ENTER INITIALS (3 LETTERS):</label>
+            <label for="mold-arcade-name" style="display:block; font-size:11px; color:var(--ink); margin-bottom:4px; font-weight:bold;">ENTER YOUR NAME:</label>
             <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
-              <input type="text" id="mold-arcade-name" maxlength="3" placeholder="AAA" style="width:80px; text-align:center; font-size:1.5rem; text-transform:uppercase; font-family:var(--font-mono); border:2px solid var(--ink); background:var(--bg-surface); color:var(--ink); padding:4px;" autocomplete="off" />
+              <input type="text" id="mold-arcade-name" maxlength="10" placeholder="Name" style="width:140px; text-align:center; font-size:1.2rem; text-transform:uppercase; font-family:var(--font-mono); border:2px solid var(--ink); background:var(--bg-surface); color:var(--ink); padding:6px;" autocomplete="off" />
               <button class="bttn-jelly bttn-sm custom-btn-relish neo-btn-shadow" id="btn-submit-mold-score" data-i18n="mold.submit">Submit</button>
             </div>
           </div>
@@ -285,8 +285,8 @@
           
           <!-- Arcade Name Input (Hidden by default) -->
           <div id="arcade-name-entry" style="display:none; margin-bottom:var(--gap-md);">
-            <label for="arcade-name" data-i18n="ph.enter_initials" style="display:block; font-size:12px; color:var(--ink); margin-bottom:4px;">Enter your initials (3 letters):</label>
-            <input type="text" id="arcade-name" maxlength="3" placeholder="AAA" style="width:100px; text-align:center; font-size:2rem; text-transform:uppercase; font-family:var(--font-mono); border:2px solid var(--ink); background:var(--bg-surface); color:var(--ink); padding:8px;" autocomplete="off" />
+            <label for="arcade-name" style="display:block; font-size:12px; color:var(--ink); margin-bottom:4px;">Enter your name:</label>
+            <input type="text" id="arcade-name" maxlength="10" placeholder="Name" style="width:140px; text-align:center; font-size:1.2rem; text-transform:uppercase; font-family:var(--font-mono); border:2px solid var(--ink); background:var(--bg-surface); color:var(--ink); padding:6px;" autocomplete="off" />
             <button class="bttn-jelly bttn-sm custom-btn-relish neo-btn-shadow" id="btn-submit-score" data-i18n="ph.submit_score" style="display:block; margin:8px auto 0;">Submit Score</button>
           </div>
 

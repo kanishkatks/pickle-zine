@@ -69,7 +69,7 @@
 
     btnSubmitScore.addEventListener('click', async () => {
       const initials = nameInput.value.trim().toUpperCase();
-      if (initials.length === 3) {
+      if (initials.length >= 1) {
         btnSubmitScore.disabled = true;
         btnSubmitScore.textContent = window.i18n.t('mold.submitting');
         const success = await window.db.submitScore(initials, score);

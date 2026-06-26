@@ -31,7 +31,7 @@ async function trackAppUnlock() {
 // Helper function to submit a score
 // Helper function to submit a score
 async function submitScore(playerName, score) {
-  const formattedName = playerName.toUpperCase().substring(0,3);
+  const formattedName = playerName.toUpperCase().substring(0,10);
   
   // 1. Fallback save locally first to guarantee persistence
   try {
