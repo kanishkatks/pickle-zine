@@ -48,7 +48,7 @@
         <div id="wisdom-speech-bubble" class="piko-speech-bubble">
           "Cleopatra attributed her beauty to a steady diet of pickles."
         </div>
-        <button class="bttn-jelly bttn-md custom-btn-relish neo-btn-shadow" id="wisdom-close-btn" style="margin: 0 auto; width: 145px; pointer-events: auto;">
+        <button class="bttn-jelly bttn-md custom-btn-relish neo-btn-shadow" id="wisdom-close-btn" style="margin: 0 auto; width: 145px;">
           Cool! 🥒
         </button>
       </div>

@@ -52,7 +52,7 @@
     // Apply new context class
     container.classList.add(`piko-context-${contextName}`);
 
-    // Manage DOM position for sandwiching tricks
+    // Manage DOM position
     if (contextName === 'auth') {
       const authContent = document.querySelector('.auth-gate__content');
       const unlockBtn = document.getElementById('auth-unlock-btn');
@@ -60,15 +60,22 @@
         authContent.insertBefore(container, unlockBtn);
         container.style.position = 'absolute';
       }
+    } else if (contextName === 'auth-focus') {
+      // Keep Piko outside the card so it can't block the button
+      const authGate = document.getElementById('auth-gate');
+      if (authGate) {
+        authGate.appendChild(container);
+        container.style.position = 'fixed';
+      }
     } else {
       document.body.appendChild(container);
       container.style.position = 'fixed';
     }
   }
 
-  function react(emotion, duration = 3000) {
+  function react(emotion, duration = 3000, force = false) {
     if (!container || !ASSETS[emotion]) return;
-    if (currentEmotion === emotion && ASSETS[emotion].type !== 'video') return;
+    if (!force && currentEmotion === emotion && ASSETS[emotion].type !== 'video') return;
 
     // Trigger squash-and-stretch pop feedback animation
     container.classList.remove('piko-pop');
