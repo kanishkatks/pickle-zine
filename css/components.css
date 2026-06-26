@@ -932,6 +932,11 @@ body.is-locked {
   -webkit-tap-highlight-color: rgba(0,0,0,0.1);
 }
 
+#auth-code-input:focus {
+  box-shadow: 0 0 0 3px var(--relish-glow);
+  border-color: var(--relish);
+}
+
 /* ── WHACK-A-MOLD ─────────────────────────────────────────── */
 .mold-hole {
   transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
@@ -1125,8 +1130,7 @@ body.is-locked {
   z-index: 99999 !important;
   pointer-events: none !important;
   transform: translate(-50%, -50%) !important;
-  transition: none !important;
-  animation: none !important; /* Kill pikoPop animation */
+  transition: opacity 0.35s ease, transform 0.35s ease !important;
   --piko-base-transform: none; /* Reset transform variable */
 }
 

@@ -230,3 +230,58 @@
   transform-origin: top center;
   animation: authPeekLoop 4s infinite ease-in-out;
 }
+
+/* Pause peek when user is focused on input or Piko is speaking */
+.piko-context-auth.piko-peek-paused img,
+.piko-context-auth.piko-peek-paused video {
+  animation-play-state: paused;
+}
+
+/* ── PIKO AUTH DENIED EXIT/RETURN ─────────────────────────── */
+@keyframes pikoAuthDeniedExit {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 1; transform: translateY(-120px) scale(1.3); }
+}
+
+@keyframes pikoAuthDeniedReturn {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, 50%) scale(0.6); }
+}
+
+.piko-denied-exit {
+  animation: pikoAuthDeniedExit 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.piko-denied-return {
+  animation: pikoAuthDeniedReturn 0.35s ease-in forwards;
+}
+
+/* ── PIKO UNLOCK CELEBRATION ──────────────────────────────── */
+@keyframes pikoUnlockCelebrate {
+  0%   { transform: var(--piko-base-transform) scale(1) rotate(0deg); }
+  25%  { transform: var(--piko-base-transform) scale(1.3, 0.7) rotate(-10deg); }
+  50%  { transform: var(--piko-base-transform) scale(0.8, 1.2) rotate(8deg); }
+  75%  { transform: var(--piko-base-transform) scale(1.1, 0.9) rotate(-4deg); }
+  100% { transform: var(--piko-base-transform) scale(1) rotate(0deg); }
+}
+
+.piko-unlock-celebrate {
+  animation: pikoUnlockCelebrate 0.6s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+/* ── REDUCED MOTION ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .piko-context-auth img,
+  .piko-context-auth video {
+    animation: none !important;
+  }
+  .piko-pop,
+  .piko-land-bounce,
+  .piko-wave-puppet,
+  .piko-denied-exit,
+  .piko-denied-return,
+  .piko-unlock-celebrate,
+  .shake-anim {
+    animation: none !important;
+  }
+}

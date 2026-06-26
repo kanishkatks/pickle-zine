@@ -150,10 +150,12 @@
     
     // Trigger slide-in
     bubble.classList.add('is-active');
-    
+    document.dispatchEvent(new CustomEvent('piko:speaking', { detail: { active: true } }));
+
     if (duration !== Infinity) {
       bubble._timer = setTimeout(() => {
         bubble.classList.remove('is-active');
+        document.dispatchEvent(new CustomEvent('piko:speaking', { detail: { active: false } }));
       }, duration);
     }
   }
@@ -163,6 +165,7 @@
     if (bubble) {
       bubble.classList.remove('is-active');
       if (bubble._timer) clearTimeout(bubble._timer);
+      document.dispatchEvent(new CustomEvent('piko:speaking', { detail: { active: false } }));
     }
   }
 
