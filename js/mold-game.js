@@ -119,6 +119,14 @@
       window.piko.setContext('game-tutorial');
     }
 
+    // Move Piko into the spot div so it's in document flow
+    const pikoEl = document.getElementById('piko-reaction-container');
+    const spot = document.getElementById('piko-mold-spot');
+    if (pikoEl && spot && pikoEl.parentNode !== spot) {
+      spot.appendChild(pikoEl);
+      pikoEl.style.position = 'relative';
+    }
+
     const badCard = document.getElementById('mold-tut-bad-card');
     const goodCard = document.getElementById('mold-tut-good-card');
     const mascotEl = document.getElementById('piko-reaction-container');
@@ -126,10 +134,7 @@
     function runStep() {
       if (isPlaying) return;
       if (tutorialStep === 0) {
-        // Step 1: Slide left to Bad Spore card, react hating-it, scale Piko to 1.4x!
-        if (mascotEl) {
-          mascotEl.style.transform = 'translateX(-65px) scale(1.4)';
-        }
+        // Step 1: Highlight Bad Spore card, react hating-it
         if (badCard) {
           badCard.style.transform = 'scale(1.06)';
           badCard.style.borderColor = 'var(--rust)';
@@ -145,10 +150,7 @@
         }
         tutorialStep = 1;
       } else {
-        // Step 2: Slide right to Good Bacteria card, react loving-it, scale Piko to 1.4x!
-        if (mascotEl) {
-          mascotEl.style.transform = 'translateX(65px) scale(1.4)';
-        }
+        // Step 2: Highlight Good Bacteria card, react loving-it
         if (goodCard) {
           goodCard.style.transform = 'scale(1.06)';
           goodCard.style.borderColor = 'var(--relish)';
@@ -174,11 +176,6 @@
     if (tutorialInterval) {
       clearInterval(tutorialInterval);
       tutorialInterval = null;
-    }
-    // Restore Piko container styles when exiting tutorial!
-    const mascotEl = document.getElementById('piko-reaction-container');
-    if (mascotEl) {
-      mascotEl.style.transform = '';
     }
     const badCard = document.getElementById('mold-tut-bad-card');
     const goodCard = document.getElementById('mold-tut-good-card');
@@ -250,7 +247,6 @@
 
     function runTutorialStep(step) {
       if (step === 0) {
-        if (mascotEl) mascotEl.style.transform = 'translateX(-65px) scale(1.4)';
         if (badCard) {
           badCard.style.transform = 'scale(1.1)';
           badCard.style.borderColor = 'var(--rust)';
@@ -270,7 +266,6 @@
           ]);
         }
       } else if (step === 1) {
-        if (mascotEl) mascotEl.style.transform = 'translateX(65px) scale(1.4)';
         if (goodCard) {
           goodCard.style.transform = 'scale(1.1)';
           goodCard.style.borderColor = 'var(--relish)';
@@ -302,8 +297,6 @@
     if (window.piko && window.piko.say) {
       window.piko.say('');
     }
-    const mascotEl = document.getElementById('piko-reaction-container');
-    if (mascotEl) mascotEl.style.transform = '';
     const badCard = document.getElementById('mold-tut-bad-card');
     const goodCard = document.getElementById('mold-tut-good-card');
     if (badCard) {
