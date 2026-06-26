@@ -397,12 +397,15 @@
         if (skipBtn) {
           skipBtn.onclick = (e) => {
             e.stopPropagation();
-            tutModal.classList.remove('is-active');
-            setTimeout(() => {
-              tutModal.remove();
-              tutModal = null;
-              // Don't call onComplete — just close
-            }, 300);
+            if (card.onSecondary) {
+              card.onSecondary();
+            } else {
+              tutModal.classList.remove('is-active');
+              setTimeout(() => {
+                tutModal.remove();
+                tutModal = null;
+              }, 300);
+            }
           };
         }
         if (btn) {

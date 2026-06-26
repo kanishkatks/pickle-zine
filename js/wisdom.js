@@ -72,16 +72,26 @@
       lastIdx = idx;
 
       if (window.piko && window.piko.showTutorialCards) {
-        window.piko.showTutorialCards([{
-          img: 'assets/piko/wisdom.png',
-          imgSize: 200,
-          imgClass: 'piko-reading',
-          text: '"' + quotes[idx] + '"',
-          items: [],
-          btnText: (window.i18n ? window.i18n.t('wisdom.close_btn') : 'Cool!') + ' 🥒'
-        }], () => {
-          // Nothing to do after close
-        });
+        function showWisdomCard() {
+          const q = getWisdom();
+          let i;
+          do { i = Math.floor(Math.random() * q.length); } while (i === lastIdx && q.length > 1);
+          lastIdx = i;
+
+          window.piko.showTutorialCards([{
+            img: 'assets/piko/wisdom.png',
+            imgSize: 200,
+            imgClass: 'piko-reading',
+            text: '"' + q[i] + '"',
+            items: [],
+            btnText: (window.i18n ? window.i18n.t('wisdom.close_btn') : 'Cool!') + ' 🥒',
+            secondaryBtnText: 'Another one! 🔄',
+            onSecondary: () => showWisdomCard()
+          }], () => {
+            // Cool pressed — back to page
+          });
+        }
+        showWisdomCard();
       }
     });
   });
