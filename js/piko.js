@@ -259,6 +259,7 @@
       modal.classList.remove('is-active');
       setTimeout(() => modal.remove(), 300);
       walkthroughModal = null;
+      window.walkthroughActive = false;
       setContext('home');
       react('idle', Infinity);
       localStorage.setItem('zine-walkthrough-completed', 'true');
@@ -307,6 +308,7 @@
           m.classList.remove('is-active');
           setTimeout(() => m.remove(), 300);
           walkthroughModal = null;
+          window.walkthroughActive = false;
           setContext('home');
           react('idle', Infinity);
           localStorage.setItem('zine-walkthrough-completed', 'true');
@@ -316,6 +318,7 @@
   }
 
   function startGuidedWalkthrough() {
+    window.walkthroughActive = true;
     setContext('home');
     showWalkthroughStep(0);
   }

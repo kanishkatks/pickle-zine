@@ -537,6 +537,7 @@
   }
 
   function handlePageChange() {
+    if (window.walkthroughActive) return;
     const hash = window.location.hash.replace('#', '') || 'home';
     if (hash === 'ph-scale') {
       if (!isPlaying) {

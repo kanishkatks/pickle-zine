@@ -97,6 +97,7 @@
   }
 
   function handlePageChange() {
+    if (window.walkthroughActive) return;
     const hash = window.location.hash.replace('#', '') || 'home';
     if (hash === 'vinegar') {
       if (!isPlaying) {
