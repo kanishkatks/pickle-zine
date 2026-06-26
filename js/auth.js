@@ -87,12 +87,12 @@
 
     // Progressive feedback
     let emotion = 'denied';
-    let message = 'Wrong code! Check the zine!';
+    let message = window.i18n.t('auth.wrong_code');
     if (failureCount >= 5) {
       emotion = 'panic';
-      message = 'Are you sure you have the zine??';
+      message = window.i18n.t('auth.panic');
     } else if (failureCount >= 3) {
-      message = 'Find the password in the zine!';
+      message = window.i18n.t('auth.hint');
     }
 
     showPiko(emotion, message);
@@ -106,7 +106,7 @@
       isDenying = false;
 
       // Return to friendly
-      const PHRASES = ["Try again!", "You got this!", "One more try!"];
+      const PHRASES = [window.i18n.t('auth.retry_1'), window.i18n.t('auth.retry_2'), window.i18n.t('auth.retry_3')];
       showPiko('intro', PHRASES[Math.floor(Math.random() * PHRASES.length)]);
       codeInput.focus();
     }, DENIED_DISPLAY_MS);
@@ -127,10 +127,10 @@
     });
 
     const FOCUS_PHRASES = [
-      "Psst! What's the code?",
-      "Check your zine!",
-      "I believe in you!",
-      "Type it in!",
+      window.i18n.t('auth.focus_1'),
+      window.i18n.t('auth.focus_2'),
+      window.i18n.t('auth.focus_3'),
+      window.i18n.t('auth.focus_4'),
     ];
 
     codeInput.addEventListener('focus', () => {

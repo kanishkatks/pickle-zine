@@ -17,24 +17,29 @@
 </head>
 <body class="is-locked">
 
+  <!-- Language Toggle -->
+  <button id="lang-toggle" onclick="window.i18n && window.i18n.setLang(window.i18n.currentLang === 'en' ? 'nl' : 'en')" style="position:fixed; top:8px; right:8px; z-index:9999; background:var(--bg-surface); border:2px solid var(--ink); border-radius:var(--radius-sm); padding:4px 8px; font-size:12px; font-weight:bold; cursor:pointer; box-shadow:2px 2px 0 var(--ink);">
+    EN/NL
+  </button>
+
   <!-- ══════════════════════════════════════════════════════
        AUTH GATE (ZINE PASSWORD)
   ═══════════════════════════════════════════════════════ -->
   <div id="auth-gate" class="auth-gate neo-brutalist-heavy">
     <div class="auth-gate__content neo-brutalist-inner">
       <div style="font-size:4rem; margin-bottom:var(--gap-sm);">🤫</div>
-      <h2 style="font-size:2rem; margin-bottom:var(--gap-sm); color:var(--ink);">Zine Access Only</h2>
-      <p style="margin-bottom:var(--gap-md); color:var(--ink-muted); font-size:14px;">Enter the Secret Access Code printed inside your physical copy of The Global Pickle Zine.</p>
+      <h2 data-i18n="auth.title" style="font-size:2rem; margin-bottom:var(--gap-sm); color:var(--ink);">Zine Access Only</h2>
+      <p data-i18n="auth.desc" style="margin-bottom:var(--gap-md); color:var(--ink-muted); font-size:14px;">Enter the Secret Access Code printed inside your physical copy of The Global Pickle Zine.</p>
       
       <div class="form-group squishy-input" style="text-align:left;">
-        <label for="auth-code-input">Secret Code</label>
-        <input type="password" id="auth-code-input" placeholder="Enter code here..." autocomplete="off" />
+        <label for="auth-code-input" data-i18n="auth.secret_code">Secret Code</label>
+        <input type="password" id="auth-code-input" placeholder="Enter code here..." data-i18n-placeholder="auth.placeholder" autocomplete="off" />
       </div>
       
       <button class="neo-btn-shadow" id="auth-unlock-btn" onclick="window.attemptUnlock && window.attemptUnlock()" style="margin-top:var(--gap-sm); width:100%; padding:12px 24px; font-family:var(--font-display); font-size:16px; font-weight:800; text-transform:uppercase; letter-spacing:1px; background:var(--relish); color:var(--bg); border:2px solid var(--ink); border-radius:var(--radius-md); cursor:pointer;">
-        🔓 Unlock App
+        🔓 <span data-i18n="auth.unlock_btn">Unlock App</span>
       </button>
-      <div id="auth-error" style="color:var(--rust); font-size:12px; margin-top:8px; font-weight:bold; display:none;">Incorrect code. Try again!</div>
+      <div id="auth-error" data-i18n="auth.incorrect" style="color:var(--rust); font-size:12px; margin-top:8px; font-weight:bold; display:none;">Incorrect code. Try again!</div>
     </div>
   </div>
 
@@ -117,9 +122,9 @@
       
       <div class="heading-block neo-brutalist">
         <div class="page-title">
-          <p class="page-title__tag">Start Here</p>
-          <h2 class="page-title__name" style="margin-top:8px;">Pick a Game!</h2>
-          <p class="page-title__desc">Choose one of our fun pickle activities below to get started.</p>
+          <p class="page-title__tag" data-i18n="html.start_here">Start Here</p>
+          <h2 class="page-title__name" data-i18n="html.pick_game" style="margin-top:8px;">Pick a Game!</h2>
+          <p class="page-title__desc" data-i18n="html.pick_desc">Choose one of our fun pickle activities below to get started.</p>
         </div>
       </div>
 
@@ -128,15 +133,15 @@
         <!-- Whack-A-Mold Card -->
         <div class="home-tool-card neo-brutalist" tabindex="0" role="button" onclick="document.querySelector('[data-tab=\'vinegar\']').click()">
           <div class="home-tool-card__img" style="font-size: 5rem; display: flex; align-items: center; justify-content: center; background: var(--mustard); height: 160px;">🦠</div>
-          <h3 class="home-tool-card__title">Whack-A-Mold</h3>
-          <p class="home-tool-card__desc">Protect the jar! Tap the fuzzy mold before it spreads!</p>
+          <h3 class="home-tool-card__title" data-i18n="html.mold_name">Whack-A-Mold</h3>
+          <p class="home-tool-card__desc" data-i18n="html.mold_desc">Protect the jar! Tap the fuzzy mold before it spreads!</p>
         </div>
 
         <!-- Sourness Scale Card -->
         <div class="home-tool-card neo-brutalist" tabindex="0" role="button" onclick="document.querySelector('[data-tab=\'ph-scale\']').click()">
           <div class="home-tool-card__img" style="font-size: 5rem; display: flex; align-items: center; justify-content: center; background: var(--relish); height: 160px;">⚡</div>
-          <h3 class="home-tool-card__title">Sour Blitz</h3>
-          <p class="home-tool-card__desc">How fast can you spot the sour? Hit the leaderboard!</p>
+          <h3 class="home-tool-card__title" data-i18n="html.blitz_name">Sour Blitz</h3>
+          <p class="home-tool-card__desc" data-i18n="html.blitz_desc">How fast can you spot the sour? Hit the leaderboard!</p>
         </div>
 
       </div>
@@ -148,22 +153,22 @@
     <section class="page" id="page-vinegar" data-page="vinegar" role="tabpanel">
       <div class="heading-block neo-brutalist">
         <div class="page-title">
-          <p class="page-title__tag">Game 1</p>
+          <p class="page-title__tag" data-i18n="html.game_1">Game 1</p>
           <div class="page-title__graphic neo-brutalist-inner float-anim" style="font-size: 4rem; display: flex; align-items: center; justify-content: center; background: var(--mustard); width: 100px; height: 100px;">🦠</div>
-          <h2 class="page-title__name">Whack-A-Mold</h2>
+          <h2 class="page-title__name" data-i18n="html.mold_name">Whack-A-Mold</h2>
           <p class="page-title__desc">Tap the fuzzy mold 🦠 as fast as you can! Avoid the good bacteria 🧫 or you'll lose points!</p>
         </div>
       </div>
 
       <div class="tool-workspace-card neo-brutalist-heavy" style="position:relative;">
-        <div class="tool-workspace-header">Jar Protection Zone</div>
+        <div class="tool-workspace-header" data-i18n="html.jar_zone">Jar Protection Zone</div>
         
-        <button class="bttn-exit-arcade" id="btn-exit-mold-arcade" style="display:none;">Exit Arcade ❌</button>
+        <button class="bttn-exit-arcade" id="btn-exit-mold-arcade" style="display:none;"><span data-i18n="mold.exit">Exit Arcade</span> ❌</button>
         
         <!-- Game Over / Start Screen Overlay -->
         <div id="mold-overlay" class="neo-brutalist-inner" style="position:absolute; inset:0; z-index:10; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:var(--gap-md); margin:8px; border-radius:var(--radius-lg); overflow-y:auto;">
-          <h3 id="mold-overlay-title" style="font-size:1.8rem; margin-bottom:var(--gap-xs); color:var(--ink);">Protect the Jar!</h3>
-          <p id="mold-overlay-desc" style="margin-bottom:var(--gap-md); color:var(--ink-muted); font-size:14px;">Tap the 🦠 but NEVER tap the 🧫. Ready?</p>
+          <h3 id="mold-overlay-title" data-i18n="mold.title" style="font-size:1.8rem; margin-bottom:var(--gap-xs); color:var(--ink);">Protect the Jar!</h3>
+          <p id="mold-overlay-desc" data-i18n="mold.desc" style="margin-bottom:var(--gap-md); color:var(--ink-muted); font-size:14px;">Tap the mold but NEVER tap the good bacteria. Ready?</p>
           
           <!-- Attract-mode Side-by-Side Bacteria Showcase Card -->
           <div id="mold-tutorial-showcase" style="display:flex; justify-content:center; gap:var(--gap-sm); width:100%; max-width:320px; margin-bottom:var(--gap-md); position:relative; pointer-events:none;">
@@ -186,20 +191,20 @@
           
           <!-- Arcade Name Input for Whack-A-Mold -->
           <div id="mold-arcade-name-entry" style="display:none; margin-bottom:var(--gap-md); width:100%;">
-            <label for="mold-arcade-name" style="display:block; font-size:11px; color:var(--ink); margin-bottom:4px; font-weight:bold;">ENTER INITIALS (3 LETTERS):</label>
+            <label for="mold-arcade-name" data-i18n="mold.enter_initials" style="display:block; font-size:11px; color:var(--ink); margin-bottom:4px; font-weight:bold;">ENTER INITIALS (3 LETTERS):</label>
             <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
               <input type="text" id="mold-arcade-name" maxlength="3" placeholder="AAA" style="width:80px; text-align:center; font-size:1.5rem; text-transform:uppercase; font-family:var(--font-mono); border:2px solid var(--ink); background:var(--bg-surface); color:var(--ink); padding:4px;" autocomplete="off" />
-              <button class="bttn-jelly bttn-sm custom-btn-relish neo-btn-shadow" id="btn-submit-mold-score">Submit</button>
+              <button class="bttn-jelly bttn-sm custom-btn-relish neo-btn-shadow" id="btn-submit-mold-score" data-i18n="mold.submit">Submit</button>
             </div>
           </div>
 
 
           <div style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:200px; z-index:15;">
             <button class="bttn-jelly bttn-md custom-btn-relish neo-btn-shadow" id="btn-start-mold">
-              Start Game! 🕹️
+              <span data-i18n="mold.start">Start Game!</span> 🕹️
             </button>
             <button class="bttn-unite bttn-sm custom-btn-wisdom neo-btn-shadow" id="btn-show-guide">
-              Play Tutorial! 📖
+              <span data-i18n="mold.tutorial">Play Tutorial!</span> 📖
             </button>
           </div>
         </div>
@@ -242,7 +247,7 @@
       <!-- Heading Block -->
       <div class="heading-block neo-brutalist">
         <div class="page-title">
-          <p class="page-title__tag">Game 2</p>
+          <p class="page-title__tag" data-i18n="html.game_2">Game 2</p>
           <img src="img/kimchi_beaker_1778245915039.png" alt="Kimchi Beaker" class="page-title__graphic neo-brutalist-inner float-anim" />
           <h2 class="page-title__name">Sourness Scale</h2>
           <p class="page-title__desc">Drag the slider left and right to see how sour different foods are!</p>
@@ -251,12 +256,12 @@
 
       <!-- Tool Workspace Card -->
       <div class="tool-workspace-card neo-brutalist-heavy" style="position:relative;">
-        <div class="tool-workspace-header">Game Board</div>
+        <div class="tool-workspace-header" data-i18n="html.game_board">Game Board</div>
         
         <!-- Game Over / Start Screen Overlay -->
         <div id="game-overlay" class="neo-brutalist-inner" style="position:absolute; inset:0; z-index:10; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:var(--gap-xl); margin:12px; border-radius:var(--radius-lg);">
-          <h3 id="game-overlay-title" style="font-size:2rem; margin-bottom:var(--gap-md); color:var(--ink);">Sour Blitz! ⏱️</h3>
-          <p id="game-overlay-desc" style="margin-bottom:var(--gap-xl); color:var(--ink-muted);">You have 60 seconds to guess if funky items are MORE or LESS sour than Pure Water. Go fast!</p>
+          <h3 id="game-overlay-title" style="font-size:2rem; margin-bottom:var(--gap-md); color:var(--ink);"><span data-i18n="ph.title">Sour Blitz!</span> ⏱️</h3>
+          <p id="game-overlay-desc" data-i18n="ph.desc" style="margin-bottom:var(--gap-xl); color:var(--ink-muted);">You have 60 seconds to guess if funky items are MORE or LESS sour than Pure Water. Go fast!</p>
           
           <!-- Attract-mode Color-Graded pH Scale Tutorial -->
           <div id="ph-tutorial-showcase" style="width:100%; max-width:320px; margin-bottom:var(--gap-md); border:2px solid var(--ink); border-radius:var(--radius-md); background:var(--bg-surface); padding:10px 8px; box-shadow:3px 3px 0 var(--ink); display:flex; flex-direction:column; gap:6px; pointer-events:none; position:relative; overflow:hidden;">
@@ -281,19 +286,19 @@
           
           <!-- Arcade Name Input (Hidden by default) -->
           <div id="arcade-name-entry" style="display:none; margin-bottom:var(--gap-md);">
-            <label for="arcade-name" style="display:block; font-size:12px; color:var(--ink); margin-bottom:4px;">Enter your initials (3 letters):</label>
+            <label for="arcade-name" data-i18n="ph.enter_initials" style="display:block; font-size:12px; color:var(--ink); margin-bottom:4px;">Enter your initials (3 letters):</label>
             <input type="text" id="arcade-name" maxlength="3" placeholder="AAA" style="width:100px; text-align:center; font-size:2rem; text-transform:uppercase; font-family:var(--font-mono); border:2px solid var(--ink); background:var(--bg-surface); color:var(--ink); padding:8px;" autocomplete="off" />
-            <button class="bttn-jelly bttn-sm custom-btn-relish neo-btn-shadow" id="btn-submit-score" style="display:block; margin:8px auto 0;">Submit Score</button>
+            <button class="bttn-jelly bttn-sm custom-btn-relish neo-btn-shadow" id="btn-submit-score" data-i18n="ph.submit_score" style="display:block; margin:8px auto 0;">Submit Score</button>
           </div>
 
-          <button class="bttn-exit-arcade" id="btn-exit-blitz-arcade" style="display:none;">Exit Arcade ❌</button>
+          <button class="bttn-exit-arcade" id="btn-exit-blitz-arcade" style="display:none;"><span data-i18n="mold.exit">Exit Arcade</span> ❌</button>
 
           <div style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:200px; z-index:15;">
             <button class="bttn-jelly bttn-md custom-btn-relish neo-btn-shadow" id="btn-start-game">
-              Start Game! 🕹️
+              <span data-i18n="ph.start">Start Game!</span> 🕹️
             </button>
             <button class="bttn-unite bttn-sm custom-btn-wisdom neo-btn-shadow" id="btn-show-blitz-guide">
-              Play Tutorial! 📖
+              <span data-i18n="ph.tutorial">Play Tutorial!</span> 📖
             </button>
           </div>
         </div>
@@ -310,7 +315,7 @@
             </div>
           </div>
           <div class="card__body">
-            <p class="text-muted" style="font-size:12px; margin-bottom:var(--gap-md);">Is this item MORE SOUR or LESS SOUR than Pure Water (pH 7.0)?</p>
+            <p class="text-muted" data-i18n="ph.question" style="font-size:12px; margin-bottom:var(--gap-md);">Is this item MORE SOUR or LESS SOUR than Pure Water (pH 7.0)?</p>
             
             <div id="game-item-display" class="neo-brutalist-inner" style="background:var(--bg-surface); padding:var(--gap-xl); border-radius:var(--radius-lg); margin-bottom:var(--gap-lg); transition: background 0.2s, transform 0.2s;">
               <div id="game-item-emoji" style="font-size:5rem; line-height:1; margin-bottom:var(--gap-sm); filter:drop-shadow(0 4px 12px rgba(0,0,0,0.1));">❓</div>
@@ -319,12 +324,12 @@
 
             <div style="display:flex; gap:var(--gap-md);">
               <button class="bttn-stretch bttn-md custom-btn-relish neo-btn-shadow" style="flex:1; padding:12px;" id="btn-more-sour">
-                🍋 MORE SOUR
-                <span style="display:block; font-size:10px; opacity:0.8; margin-top:4px;">(Lower pH)</span>
+                🍋 <span data-i18n="ph.more_sour">MORE SOUR</span>
+                <span data-i18n="ph.lower_ph" style="display:block; font-size:10px; opacity:0.8; margin-top:4px;">(Lower pH)</span>
               </button>
               <button class="bttn-stretch bttn-md custom-btn-dill neo-btn-shadow" style="flex:1; padding:12px;" id="btn-less-sour">
-                💧 LESS SOUR
-                <span style="display:block; font-size:10px; opacity:0.8; margin-top:4px;">(Higher pH)</span>
+                💧 <span data-i18n="ph.less_sour">LESS SOUR</span>
+                <span data-i18n="ph.higher_ph" style="display:block; font-size:10px; opacity:0.8; margin-top:4px;">(Higher pH)</span>
               </button>
             </div>
           </div>
@@ -335,11 +340,11 @@
       <div class="result-block-highlight" style="display:block; margin-top:var(--gap-lg);">
         <div class="ph-readout neo-brutalist-inner" style="border:2px solid var(--ink); box-shadow:none; background:var(--mustard);">
           <div style="grid-column: 1 / -1; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:12px;">
-            <h3 style="font-family:var(--font-display); font-size:1.4rem; font-weight:800; color:var(--ink); margin:0;">🌍 Global Leaderboard</h3>
-            <button id="btn-refresh-leaderboard" class="bttn-stretch bttn-sm" style="background:var(--bg); color:var(--ink); padding:4px 8px; font-size:10px;">🔄 Refresh</button>
+            <h3 style="font-family:var(--font-display); font-size:1.4rem; font-weight:800; color:var(--ink); margin:0;">🌍 <span data-i18n="ph.leaderboard">Global Leaderboard</span></h3>
+            <button id="btn-refresh-leaderboard" class="bttn-stretch bttn-sm" style="background:var(--bg); color:var(--ink); padding:4px 8px; font-size:10px;">🔄 <span data-i18n="ph.refresh">Refresh</span></button>
           </div>
           <div id="leaderboard-list" style="grid-column: 1 / -1; width:100%; font-family:var(--font-mono); font-size:14px; line-height:1.8;">
-            <div style="text-align:center; color:var(--ink-muted);">Loading scores...</div>
+            <div data-i18n="ph.loading" style="text-align:center; color:var(--ink-muted);">Loading scores...</div>
           </div>
         </div>
       </div>
@@ -352,7 +357,7 @@
   ═══════════════════════════════════════════════════════ -->
   <footer class="site-footer neo-brutalist-footer" style="padding: 16px var(--gap-lg); display: flex; flex-direction: column; gap: var(--gap-xs); align-items: center; justify-content: center;">
     <button class="bttn-unite bttn-sm custom-btn-wisdom neo-btn-shadow" id="wisdom-btn" style="margin: 0 auto; width: 100%; max-width: 280px; pointer-events: auto;">
-      📖 Reveal Brine Wisdom
+      📖 <span data-i18n="html.wisdom_btn">Reveal Brine Wisdom</span>
     </button>
     
     <p class="site-footer__copy" style="margin-top: var(--gap-xs); font-size: 10px;">
@@ -366,15 +371,15 @@
   <nav class="tab-nav neo-brutalist-nav" role="tablist" aria-label="Tool Navigation">
     <button class="tab-nav__btn is-active" data-tab="home" role="tab" aria-controls="page-home">
       <div class="tab-nav__btn-icon" style="font-size:1.2rem;">🥒</div>
-      <span class="tab-nav__btn-label">Hub</span>
+      <span class="tab-nav__btn-label" data-i18n="html.tab_hub">Hub</span>
     </button>
     <button class="tab-nav__btn" data-tab="vinegar" role="tab" aria-controls="page-vinegar">
       <div class="tab-nav__btn-icon" style="font-size:1.2rem;">🦠</div>
-      <span class="tab-nav__btn-label">Mold</span>
+      <span class="tab-nav__btn-label" data-i18n="html.tab_mold">Mold</span>
     </button>
     <button class="tab-nav__btn" data-tab="ph-scale" role="tab" aria-controls="page-ph-scale">
       <div class="tab-nav__btn-icon" style="font-size:1.2rem;">⚡</div>
-      <span class="tab-nav__btn-label">Blitz</span>
+      <span class="tab-nav__btn-label" data-i18n="html.tab_blitz">Blitz</span>
     </button>
   </nav>
 
@@ -384,6 +389,7 @@
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
+  <script src="js/translations.js?v=1.5"></script>
   <script src="js/db.js?v=2.1"></script>
   <script src="js/auth.js?v=2.1"></script>
   <script src="js/tabs.js?v=2.1"></script>

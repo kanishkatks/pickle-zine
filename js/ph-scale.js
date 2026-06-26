@@ -91,12 +91,12 @@
 
   /* ── LEADERBOARD LOGIC ──────────────────────────────────── */
   async function updateLeaderboardUI() {
-    leaderboardList.innerHTML = '<div style="text-align:center; color:var(--ink-muted);">Loading scores...</div>';
+    leaderboardList.innerHTML = '<div style="text-align:center; color:var(--ink-muted);">' + window.i18n.t('ph.loading') + '</div>';
     if (!window.db) return;
     
     const scores = await window.db.fetchLeaderboard();
     if (scores.length === 0) {
-      leaderboardList.innerHTML = '<div style="text-align:center; color:var(--ink-muted);">No scores yet! Be the first!</div>';
+      leaderboardList.innerHTML = '<div style="text-align:center; color:var(--ink-muted);">' + window.i18n.t('ph.no_scores') + '</div>';
       return;
     }
     
@@ -146,14 +146,14 @@
     overlay.style.display = 'flex';
     overlayScore.style.display = 'none';
     arcadeEntry.style.display = 'none';
-    overlayTitle.textContent = "Sour Blitz! ⏱️";
-    overlayDesc.textContent = "You have 60 seconds to guess if funky items are MORE or LESS sour than Pure Water. Go fast!";
-    btnStart.textContent = "Start Game! 🕹️";
+    overlayTitle.textContent = window.i18n.t('ph.title') + " ⏱️";
+    overlayDesc.textContent = window.i18n.t('ph.desc');
+    btnStart.textContent = window.i18n.t('ph.start') + " 🕹️";
     btnStart.style.display = 'inline-block';
     if (btnShowGuide) btnShowGuide.style.display = 'inline-block';
     
     emojiDisplay.textContent = "🍋";
-    nameDisplay.textContent = "Sour Blitz";
+    nameDisplay.textContent = window.i18n.t('ph.title');
     
     startTutorialLoop();
   }
@@ -186,8 +186,8 @@
           window.piko.react('extreme-sour');
         }
         if (window.piko && window.piko.say) {
-          window.piko.say('🍋 LOW pH ITEMS (1-6) ARE MORE SOUR THAN PURE WATER! 🍋', [
-            { text: 'Got it! 👉', action: () => runTutorialStep(1) }
+          window.piko.say('🍋 ' + window.i18n.t('ph.tut_acid') + ' 🍋', [
+            { text: window.i18n.t('mold.got_it') + ' 👉', action: () => runTutorialStep(1) }
           ]);
         }
       } else if (step === 1) {
@@ -203,8 +203,8 @@
           window.piko.react('opposite-sour');
         }
         if (window.piko && window.piko.say) {
-          window.piko.say('🫧 HIGH pH ITEMS (8-14) ARE LESS SOUR! GUESS FAST! 🫧', [
-            { text: 'Start Blitz! ⚡', action: () => {
+          window.piko.say('🫧 ' + window.i18n.t('ph.tut_alkaline') + ' 🫧', [
+            { text: window.i18n.t('ph.start_blitz') + ' ⚡', action: () => {
               stopInteractiveTutorial();
               startBlitz();
             }}
@@ -290,8 +290,8 @@
     btnLessSour.disabled = true;
 
     overlay.style.display = 'flex';
-    overlayTitle.textContent = "Time's Up!";
-    overlayDesc.textContent = "Your final Sour Blitz score is:";
+    overlayTitle.textContent = window.i18n.t('ph.times_up');
+    overlayDesc.textContent = window.i18n.t('ph.final_score');
     overlayScore.style.display = 'block';
     overlayScore.textContent = score;
     
@@ -308,16 +308,16 @@
         window.piko.react(score >= 800 ? 'win' : 'fail', 5000);
       }
     } else {
-      btnStart.textContent = "Play Again!";
+      btnStart.textContent = window.i18n.t('ph.play_again');
       btnStart.style.display = 'block';
       if (btnShowGuide) btnShowGuide.style.display = 'block';
       if (window.piko && window.piko.react) {
         window.piko.react('fail', 5000);
       }
     }
-    
+
     emojiDisplay.textContent = "🏁";
-    nameDisplay.textContent = "Game Over";
+    nameDisplay.textContent = window.i18n.t('ph.game_over');
 
     setTimeout(() => {
       const hash = window.location.hash.replace('#', '') || 'home';
@@ -568,17 +568,17 @@
       const name = arcadeInput.value.trim();
       if (name.length < 1) return;
       
-      btnSubmit.textContent = "Saving...";
+      btnSubmit.textContent = window.i18n.t('ph.saving');
       btnSubmit.disabled = true;
       
       await window.db.submitScore(name, score);
       
       arcadeEntry.style.display = 'none';
       btnStart.style.display = 'block';
-      btnStart.textContent = "Play Again!";
+      btnStart.textContent = window.i18n.t('ph.play_again');
       if (btnShowGuide) btnShowGuide.style.display = 'block';
       if (btnExitBlitzArcade) btnExitBlitzArcade.style.display = 'block';
-      btnSubmit.textContent = "Submit Score";
+      btnSubmit.textContent = window.i18n.t('ph.submit_score');
       btnSubmit.disabled = false;
       
       updateLeaderboardUI();

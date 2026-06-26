@@ -186,8 +186,8 @@
       modal.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; gap:var(--gap-md);">
           <img src="assets/piko/celebrate.png" style="width:200px; height:200px; object-fit:contain;" />
-          <div class="piko-speech-bubble" style="max-width:280px; font-size:1.4rem;">ACCESS GRANTED!</div>
-          <div id="celebration-subtitle" style="color:var(--bg); font-family:var(--font-display); font-size:13px; opacity:0.8; margin-top:var(--gap-sm);">Tap to continue</div>
+          <div class="piko-speech-bubble" style="max-width:280px; font-size:1.4rem;">${window.i18n.t('auth.granted')}</div>
+          <div id="celebration-subtitle" style="color:var(--bg); font-family:var(--font-display); font-size:13px; opacity:0.8; margin-top:var(--gap-sm);">${window.i18n.t('walkthrough.tap_continue')}</div>
         </div>
       `;
       document.body.appendChild(modal);
@@ -213,32 +213,34 @@
   let currentStep = 0;
   let walkthroughModal = null;
 
-  const STEPS = [
-    {
-      text: "Hey! I'm Piko! I need your help with a few things...",
-      tab: 'home',
-      img: 'assets/piko/intro.png',
-      btnText: 'What do you need?'
-    },
-    {
-      text: "My jar is under attack! Help me whack the mold before it spreads!",
-      tab: 'vinegar',
-      img: 'assets/piko/panic.png',
-      btnText: 'I got you!'
-    },
-    {
-      text: "I need to find my comfort zone on the sourness scale. What's sour and what's not?",
-      tab: 'ph-scale',
-      img: 'assets/piko/sour.png',
-      btnText: 'Easy!'
-    },
-    {
-      text: "Oh and I know EVERYTHING about pickles. Hit the Brine Wisdom button anytime for fun facts!",
-      tab: 'home',
-      img: 'assets/piko/wisdom.png',
-      btnText: "Let's go!"
-    }
-  ];
+  function getSteps() {
+    return [
+      {
+        text: window.i18n.t('walkthrough.step1_text'),
+        tab: 'home',
+        img: 'assets/piko/intro.png',
+        btnText: window.i18n.t('walkthrough.step1_btn')
+      },
+      {
+        text: window.i18n.t('walkthrough.step2_text'),
+        tab: 'vinegar',
+        img: 'assets/piko/panic.png',
+        btnText: window.i18n.t('walkthrough.step2_btn')
+      },
+      {
+        text: window.i18n.t('walkthrough.step3_text'),
+        tab: 'ph-scale',
+        img: 'assets/piko/sour.png',
+        btnText: window.i18n.t('walkthrough.step3_btn')
+      },
+      {
+        text: window.i18n.t('walkthrough.step4_text'),
+        tab: 'home',
+        img: 'assets/piko/wisdom.png',
+        btnText: window.i18n.t('walkthrough.step4_btn')
+      }
+    ];
+  }
 
   function getWalkthroughModal() {
     if (!walkthroughModal) {
@@ -251,6 +253,7 @@
   }
 
   function showWalkthroughStep(index) {
+    const STEPS = getSteps();
     if (index >= STEPS.length) {
       const modal = getWalkthroughModal();
       modal.classList.remove('is-active');
@@ -279,7 +282,7 @@
           </button>
           ${!isLast ? `
             <button id="piko-wt-skip" style="background:#ececec; color:#222; border:2px solid #222; border-radius:var(--radius-md); padding:8px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; cursor:pointer; box-shadow:3px 3px 0 #222;">
-              Skip
+              ${window.i18n.t('walkthrough.skip')}
             </button>
           ` : ''}
         </div>

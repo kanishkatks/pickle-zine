@@ -71,21 +71,21 @@
       const initials = nameInput.value.trim().toUpperCase();
       if (initials.length === 3) {
         btnSubmitScore.disabled = true;
-        btnSubmitScore.textContent = 'Submitting...';
+        btnSubmitScore.textContent = window.i18n.t('mold.submitting');
         const success = await window.db.submitScore(initials, score);
         if (success) {
-          btnSubmitScore.textContent = '✅ Submitted!';
+          btnSubmitScore.textContent = '✅ ' + window.i18n.t('mold.submitted');
           setTimeout(() => {
             nameEntry.style.display = 'none';
             btnSubmitScore.disabled = false;
-            btnSubmitScore.textContent = 'Submit Score';
+            btnSubmitScore.textContent = window.i18n.t('mold.submit');
           }, 1500);
         } else {
           btnSubmitScore.textContent = '❌ Error';
           btnSubmitScore.disabled = false;
         }
       } else {
-        alert("Please enter 3 initials!");
+        alert(window.i18n.t('mold.initials_error'));
       }
     });
 
@@ -220,9 +220,9 @@
     overlay.style.display = 'flex';
     overlayScore.style.display = 'none';
     nameEntry.style.display = 'none';
-    overlayTitle.textContent = "Protect the Jar!";
-    overlayDesc.textContent = "Tap the 🦠 but NEVER tap the 🧫. Ready?";
-    btnStart.textContent = "Start Game! 🕹️";
+    overlayTitle.textContent = window.i18n.t('mold.title');
+    overlayDesc.textContent = window.i18n.t('mold.desc');
+    btnStart.textContent = window.i18n.t('mold.start') + " 🕹️";
     btnStart.style.display = 'inline-block';
     btnShowGuide.style.display = 'inline-block';
     
@@ -258,8 +258,8 @@
           window.piko.react('hating-it');
         }
         if (window.piko && window.piko.say) {
-          window.piko.say('🦠 TAPPING MOLD EARNS POINTS! GO FAST! ❌', [
-            { text: 'Got it! 👉', action: () => runTutorialStep(1) }
+          window.piko.say('🦠 ' + window.i18n.t('mold.tut_bad') + ' ❌', [
+            { text: window.i18n.t('mold.got_it') + ' 👉', action: () => runTutorialStep(1) }
           ]);
         }
       } else if (step === 1) {
@@ -278,8 +278,8 @@
           window.piko.react('loving-it');
         }
         if (window.piko && window.piko.say) {
-          window.piko.say('🧫 BUT AVOID GOOD BACTERIA! IT COSTS A LIFE! ❤️', [
-            { text: 'Start Game! ⚡', action: () => {
+          window.piko.say('🧫 ' + window.i18n.t('mold.tut_good') + ' ❤️', [
+            { text: window.i18n.t('mold.start_game_tut') + ' ⚡', action: () => {
               stopInteractiveTutorial();
               startCountdown();
             }}
@@ -321,7 +321,7 @@
       window.piko.setContext('game-active');
     }
 
-    overlayTitle.textContent = "Get Ready!";
+    overlayTitle.textContent = window.i18n.t('mold.get_ready');
     btnStart.style.display = 'none';
     btnShowGuide.style.display = 'none';
     if (btnExitMoldArcade) btnExitMoldArcade.style.display = 'none'; // hide exit button during active play
@@ -531,8 +531,8 @@
     });
 
     overlay.style.display = 'flex';
-    overlayTitle.textContent = "Jar Saved!";
-    overlayDesc.textContent = "Final Score:";
+    overlayTitle.textContent = window.i18n.t('mold.game_over');
+    overlayDesc.textContent = window.i18n.t('mold.final_score');
     overlayScore.style.display = 'block';
     overlayScore.textContent = score;
     
@@ -543,7 +543,7 @@
       window.piko.react(score >= 100 ? 'win' : 'fail', 5000);
     }
     
-    btnStart.textContent = "Play Again";
+    btnStart.textContent = window.i18n.t('mold.play_again');
     btnStart.style.display = 'inline-block';
     btnShowGuide.style.display = 'inline-block';
     if (btnExitMoldArcade) btnExitMoldArcade.style.display = 'block';
