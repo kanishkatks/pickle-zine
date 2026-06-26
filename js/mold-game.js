@@ -491,23 +491,37 @@
       hole.textContent = '';
     });
 
-    overlay.style.display = 'flex';
-    overlayTitle.textContent = window.i18n.t('mold.game_over');
-    overlayDesc.textContent = window.i18n.t('mold.final_score');
-    overlayScore.style.display = 'block';
-    overlayScore.textContent = score;
-    
-    nameEntry.style.display = score > 0 ? 'block' : 'none';
-    
-    // Choose dynamic post-game reaction based on target score threshold (100)
-    if (window.piko && window.piko.react) {
-      window.piko.react(score >= 100 ? 'win' : 'fail', 5000);
+    // Show score celebration modal
+    const celebImg = score >= 100 ? 'assets/piko/celebrate.png' : 'assets/piko/denied.png';
+    const celebText = score >= 100 ? 'Jar Saved! Amazing!' : 'The mold won this time...';
+
+    if (window.piko && window.piko.showTutorialCards) {
+      window.piko.showTutorialCards([{
+        img: celebImg,
+        text: celebText + '\n\nScore: ' + score,
+        items: [],
+        btnText: score > 0 ? 'Submit Score' : 'Try Again'
+      }], () => {
+        overlay.style.display = 'flex';
+        overlayTitle.textContent = window.i18n.t('mold.game_over');
+        overlayDesc.textContent = window.i18n.t('mold.final_score');
+        overlayScore.style.display = 'block';
+        overlayScore.textContent = score;
+        nameEntry.style.display = score > 0 ? 'block' : 'none';
+        btnStart.textContent = window.i18n.t('mold.play_again');
+        btnStart.style.display = 'inline-block';
+        btnShowGuide.style.display = 'inline-block';
+        if (btnExitMoldArcade) btnExitMoldArcade.style.display = 'block';
+      });
+    } else {
+      overlay.style.display = 'flex';
+      overlayTitle.textContent = window.i18n.t('mold.game_over');
+      overlayScore.style.display = 'block';
+      overlayScore.textContent = score;
+      btnStart.textContent = window.i18n.t('mold.play_again');
+      btnStart.style.display = 'inline-block';
+      if (btnExitMoldArcade) btnExitMoldArcade.style.display = 'block';
     }
-    
-    btnStart.textContent = window.i18n.t('mold.play_again');
-    btnStart.style.display = 'inline-block';
-    btnShowGuide.style.display = 'inline-block';
-    if (btnExitMoldArcade) btnExitMoldArcade.style.display = 'block';
 
     // After celebration completes, resume attract-mode loop if still on this tab and not in arcade mode
     setTimeout(() => {

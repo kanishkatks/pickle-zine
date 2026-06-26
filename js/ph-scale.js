@@ -253,35 +253,47 @@
     btnMoreSour.disabled = true;
     btnLessSour.disabled = true;
 
-    overlay.style.display = 'flex';
-    overlayTitle.textContent = window.i18n.t('ph.times_up');
-    overlayDesc.textContent = window.i18n.t('ph.final_score');
-    overlayScore.style.display = 'block';
-    overlayScore.textContent = score;
-    
-    if (btnExitBlitzArcade) btnExitBlitzArcade.style.display = 'block'; // Make sure exit arcade button is visible!
-    
-    if (score > 0) {
-      arcadeEntry.style.display = 'block';
-      btnStart.style.display = 'none';
-      if (btnShowGuide) btnShowGuide.style.display = 'none';
-      arcadeInput.value = '';
-      arcadeInput.focus();
-      
-      if (window.piko && window.piko.react) {
-        window.piko.react(score >= 800 ? 'win' : 'fail', 5000);
-      }
-    } else {
-      btnStart.textContent = window.i18n.t('ph.play_again');
-      btnStart.style.display = 'block';
-      if (btnShowGuide) btnShowGuide.style.display = 'block';
-      if (window.piko && window.piko.react) {
-        window.piko.react('fail', 5000);
-      }
-    }
-
+    btnMoreSour.disabled = true;
+    btnLessSour.disabled = true;
     emojiDisplay.textContent = "🏁";
     nameDisplay.textContent = window.i18n.t('ph.game_over');
+
+    const celebImg = score >= 300 ? 'assets/piko/celebrate.png' : 'assets/piko/denied.png';
+    const celebText = score >= 300 ? "Time's Up! Great taste!" : "Time's Up! Keep practicing!";
+
+    if (window.piko && window.piko.showTutorialCards) {
+      window.piko.showTutorialCards([{
+        img: celebImg,
+        text: celebText + '\n\nScore: ' + score,
+        items: [],
+        btnText: score > 0 ? 'Submit Score' : 'Try Again'
+      }], () => {
+        overlay.style.display = 'flex';
+        overlayTitle.textContent = window.i18n.t('ph.times_up');
+        overlayDesc.textContent = window.i18n.t('ph.final_score');
+        overlayScore.style.display = 'block';
+        overlayScore.textContent = score;
+        if (btnExitBlitzArcade) btnExitBlitzArcade.style.display = 'block';
+        if (score > 0) {
+          arcadeEntry.style.display = 'block';
+          btnStart.style.display = 'none';
+          if (btnShowGuide) btnShowGuide.style.display = 'none';
+          arcadeInput.value = '';
+          arcadeInput.focus();
+        } else {
+          btnStart.textContent = window.i18n.t('ph.play_again');
+          btnStart.style.display = 'block';
+          if (btnShowGuide) btnShowGuide.style.display = 'block';
+        }
+      });
+    } else {
+      overlay.style.display = 'flex';
+      overlayScore.style.display = 'block';
+      overlayScore.textContent = score;
+      btnStart.textContent = window.i18n.t('ph.play_again');
+      btnStart.style.display = 'block';
+      if (btnExitBlitzArcade) btnExitBlitzArcade.style.display = 'block';
+    }
 
     setTimeout(() => {
       const hash = window.location.hash.replace('#', '') || 'home';
