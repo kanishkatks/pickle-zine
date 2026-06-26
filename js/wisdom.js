@@ -60,79 +60,27 @@
     return WISDOM[lang] || WISDOM.en;
   }
 
-  const btn = document.getElementById('wisdom-btn');
+  // Find all wisdom buttons (hub + wisdom tab)
+  const btns = document.querySelectorAll('#wisdom-btn, #wisdom-btn-hub');
   let lastIdx = -1;
-  let previousContext = 'home';
 
-  // 1. Dynamically build and inject the zine-style glassmorphic modal overlay
-  let overlay = document.getElementById('wisdom-overlay');
-  let speechBubble = null;
-  let closeBtn = null;
-
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = 'wisdom-overlay';
-    overlay.className = 'wisdom-modal-overlay';
-    
-    overlay.innerHTML = `
-      <div class="wisdom-modal-card">
-        <div id="wisdom-speech-bubble" class="piko-speech-bubble">
-          "Cleopatra attributed her beauty to a steady diet of pickles."
-        </div>
-        <button class="bttn-jelly bttn-md custom-btn-relish neo-btn-shadow" id="wisdom-close-btn" style="margin: 0 auto; width: 145px;">
-          ${window.i18n.t('wisdom.close_btn')} 🥒
-        </button>
-      </div>
-    `;
-    
-    document.body.appendChild(overlay);
-    speechBubble = document.getElementById('wisdom-speech-bubble');
-    closeBtn = document.getElementById('wisdom-close-btn');
-  } else {
-    speechBubble = document.getElementById('wisdom-speech-bubble');
-    closeBtn = document.getElementById('wisdom-close-btn');
-  }
-
-  // 2. Click Handler: Open full-screen cinematic overlay modal
-  if (btn) {
+  btns.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Pick random fact
-      let idx;
       const quotes = getWisdom();
-      do { idx = Math.floor(Math.random() * quotes.length); } while (idx === lastIdx);
+      let idx;
+      do { idx = Math.floor(Math.random() * quotes.length); } while (idx === lastIdx && quotes.length > 1);
       lastIdx = idx;
 
-      // Update text in speech bubble
-      if (speechBubble) {
-        speechBubble.textContent = `"${quotes[idx]}"`;
-      }
-
-      // Record previous Piko context so we return perfectly
-      const activeTab = window.location.hash.replace('#', '') || 'home';
-      previousContext = activeTab === 'home' ? 'home' : 'game-idle';
-
-      // 3. Coordinate Piko: Glide to center, scale up, wear reading glasses!
-      if (window.piko && window.piko.setContext) {
-        window.piko.setContext('wisdom');
-        window.piko.react('wisdom', Infinity);
-      }
-
-      // 4. Fade in the glassmorphic background overlay
-      overlay.classList.add('is-active');
-    });
-  }
-
-  // 3. Close Handler: Return smoothly
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      // Fade out overlay modal
-      overlay.classList.remove('is-active');
-
-      // Coordinate Piko: Glide back to active tab context, return to idle
-      if (window.piko && window.piko.setContext) {
-        window.piko.setContext(previousContext);
-        window.piko.react('idle', Infinity);
+      if (window.piko && window.piko.showTutorialCards) {
+        window.piko.showTutorialCards([{
+          img: 'assets/piko/wisdom.png',
+          text: '"' + quotes[idx] + '"',
+          items: [],
+          btnText: (window.i18n ? window.i18n.t('wisdom.close_btn') : 'Cool!') + ' 🥒'
+        }], () => {
+          // Nothing to do after close
+        });
       }
     });
-  }
+  });
 })();
