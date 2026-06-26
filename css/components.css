@@ -596,10 +596,25 @@ body.is-locked {
   }
 }
 
-/* 1. Home Hub — Piko hidden */
+/* 1. Home Hub — Piko waving above the card */
 .piko-context-home {
-  opacity: 0;
+  position: relative !important;
+  top: auto;
+  left: auto;
+  bottom: auto;
+  right: auto;
+  width: 132px;
+  height: 132px;
+  overflow: visible;
+  opacity: 1;
   pointer-events: none;
+  filter: none;
+  --piko-base-transform: none;
+  transform: none;
+}
+
+.piko-context-home img, .piko-context-home video {
+  object-fit: contain !important;
 }
 
 /* Home Hub Peeking State (Hangs upside down from browser ceiling) */

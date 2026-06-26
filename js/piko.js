@@ -60,11 +60,16 @@
         container.style.position = 'absolute';
       }
     } else if (contextName === 'auth-focus') {
-      // Keep Piko outside the card so it can't block the button
       const authGate = document.getElementById('auth-gate');
       if (authGate) {
         authGate.appendChild(container);
         container.style.position = 'fixed';
+      }
+    } else if (contextName === 'home') {
+      const homeSpot = document.getElementById('piko-home-spot');
+      if (homeSpot && container.parentNode !== homeSpot) {
+        homeSpot.appendChild(container);
+        container.style.position = 'relative';
       }
     } else {
       document.body.appendChild(container);
@@ -368,9 +373,8 @@
       if (!isWalkthroughDone) {
         startGuidedWalkthrough();
       } else {
-        // Direct land sitting on Home Hub banner perch
         setContext('home');
-        react('idle', Infinity);
+        react('intro', Infinity);
       }
     }
   });

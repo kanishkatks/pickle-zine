@@ -231,6 +231,19 @@
   animation: authPeekLoop 4s infinite ease-in-out;
 }
 
+@keyframes pikoHomeAlive {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%      { transform: translateY(-4px) rotate(2deg); }
+  50%      { transform: translateY(-2px) rotate(-1.5deg); }
+  75%      { transform: translateY(-3px) rotate(1deg); }
+}
+
+.piko-context-home img,
+.piko-context-home video {
+  transform-origin: bottom center;
+  animation: pikoHomeAlive 3s ease-in-out infinite;
+}
+
 /* ── PIKO AUTH FOCUS ENTRANCE ──────────────────────────────── */
 @keyframes pikoAuthSlideUp {
   0%   { opacity: 0; transform: translateY(40px); }
