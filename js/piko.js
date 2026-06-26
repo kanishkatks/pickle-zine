@@ -378,9 +378,14 @@
           ${card.items ? `<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:var(--gap-xs) 0;">${card.items.map(item =>
             `<div style="background:var(--bg-surface); border:2px solid var(--ink); border-radius:var(--radius-md); padding:4px 8px; font-size:12px; font-weight:700; box-shadow:2px 2px 0 var(--ink);">${item}</div>`
           ).join('')}</div>` : ''}
-          <button id="piko-tut-card-next" style="background:var(--relish); color:var(--bg); border:2px solid var(--ink); border-radius:var(--radius-md); padding:8px 20px; font-family:var(--font-display); font-weight:700; font-size:14px; cursor:pointer; box-shadow:3px 3px 0 var(--ink); pointer-events:auto;">
-            ${card.btnText}
-          </button>
+          <div style="display:flex; gap:8px; pointer-events:auto;">
+            <button id="piko-tut-card-next" style="background:var(--relish); color:var(--bg); border:2px solid var(--ink); border-radius:var(--radius-md); padding:8px 20px; font-family:var(--font-display); font-weight:700; font-size:14px; cursor:pointer; box-shadow:3px 3px 0 var(--ink);">
+              ${card.btnText}
+            </button>
+            ${card.secondaryBtnText ? `<button id="piko-tut-card-skip" style="background:var(--bg-raised); color:var(--ink-muted); border:2px solid var(--ink-muted); border-radius:var(--radius-md); padding:8px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; cursor:pointer; box-shadow:2px 2px 0 var(--brine-muted);">
+              ${card.secondaryBtnText}
+            </button>` : ''}
+          </div>
         </div>
       `;
 
@@ -388,6 +393,18 @@
 
       setTimeout(() => {
         const btn = document.getElementById('piko-tut-card-next');
+        const skipBtn = document.getElementById('piko-tut-card-skip');
+        if (skipBtn) {
+          skipBtn.onclick = (e) => {
+            e.stopPropagation();
+            tutModal.classList.remove('is-active');
+            setTimeout(() => {
+              tutModal.remove();
+              tutModal = null;
+              // Don't call onComplete — just close
+            }, 300);
+          };
+        }
         if (btn) {
           btn.onclick = (e) => {
             e.stopPropagation();

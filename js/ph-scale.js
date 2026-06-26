@@ -186,7 +186,8 @@
           img: 'assets/piko/panic.png',
           text: '30 seconds! How many can you guess? GO FAST!',
           items: [],
-          btnText: "LET'S GO! ⚡"
+          btnText: "LET'S GO! ⚡",
+          secondaryBtnText: 'Not now'
         }
       ], () => {
         startBlitz();

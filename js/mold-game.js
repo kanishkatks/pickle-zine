@@ -258,7 +258,8 @@
           img: 'assets/piko/panic.png',
           text: '30 seconds! Protect my jar! Ready??',
           items: [],
-          btnText: "LET'S GO! 🕹️"
+          btnText: "LET'S GO! 🕹️",
+          secondaryBtnText: 'Not now'
         }
       ], () => {
         startCountdown();
