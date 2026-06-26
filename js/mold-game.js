@@ -27,7 +27,7 @@
     { id: 'freeze',emoji: '🧊', type: 'power', effect: 'freeze', weight: 4, lifetime: 700 }
   ];
 
-  // State
+// State
   let score = 0;
   let timeLeft = GAME_DURATION;
   let isPlaying = false;
@@ -36,6 +36,10 @@
   let spawnTimer = null;
   let activeHole = null;
   let drainInterval = null;
+
+  // Mascot Tutorial State
+  let tutorialInterval = null;
+  let tutorialStep = 0;
 
   // DOM Refs
   const holes = document.querySelectorAll('.mold-hole');
@@ -47,18 +51,19 @@
   const overlayScore = document.getElementById('mold-overlay-score');
   const btnStart = document.getElementById('btn-start-mold');
   const btnShowGuide = document.getElementById('btn-show-guide');
-  const fieldGuide = document.getElementById('field-guide');
-  const btnCloseGuide = document.getElementById('close-guide');
   const gridContainer = document.getElementById('mold-grid');
   
   const nameEntry = document.getElementById('mold-arcade-name-entry');
   const nameInput = document.getElementById('mold-arcade-name');
   const btnSubmitScore = document.getElementById('btn-submit-mold-score');
+  const btnExitMoldArcade = document.getElementById('btn-exit-mold-arcade');
 
   function init() {
     btnStart.addEventListener('click', startCountdown);
-    btnShowGuide.addEventListener('click', () => fieldGuide.style.display = 'flex');
-    btnCloseGuide.addEventListener('click', () => fieldGuide.style.display = 'none');
+    btnShowGuide.addEventListener('click', startInteractiveTutorial);
+    if (btnExitMoldArcade) {
+      btnExitMoldArcade.addEventListener('click', exitArcadeMode);
+    }
     holes.forEach(hole => hole.addEventListener('click', handleHoleClick));
 
     btnSubmitScore.addEventListener('click', async () => {
@@ -82,12 +87,241 @@
         alert("Please enter 3 initials!");
       }
     });
+
+    // Register active page listeners for dynamic tutorial activation
+    window.addEventListener('hashchange', handlePageChange);
+    window.addEventListener('load', handlePageChange);
+    // Initial trigger
+    setTimeout(handlePageChange, 500);
+  }
+
+  function handlePageChange() {
+    const hash = window.location.hash.replace('#', '') || 'home';
+    if (hash === 'vinegar') {
+      if (!isPlaying) {
+        startTutorialLoop();
+      }
+    } else {
+      stopTutorialLoop();
+    }
+  }
+
+  function startTutorialLoop() {
+    if (tutorialInterval) clearInterval(tutorialInterval);
+
+    // Dock Piko in game tutorial context
+    if (window.piko && window.piko.setContext) {
+      window.piko.setContext('game-tutorial');
+    }
+
+    const badCard = document.getElementById('mold-tut-bad-card');
+    const goodCard = document.getElementById('mold-tut-good-card');
+    const mascotEl = document.getElementById('piko-reaction-container');
+
+    function runStep() {
+      if (isPlaying) return;
+      if (tutorialStep === 0) {
+        // Step 1: Slide left to Bad Spore card, react hating-it, scale Piko to 1.4x!
+        if (mascotEl) {
+          mascotEl.style.transform = 'translateX(-65px) scale(1.4)';
+        }
+        if (badCard) {
+          badCard.style.transform = 'scale(1.06)';
+          badCard.style.borderColor = 'var(--rust)';
+          badCard.style.boxShadow = '0 0 12px var(--rust)';
+        }
+        if (goodCard) {
+          goodCard.style.transform = 'scale(1)';
+          goodCard.style.borderColor = 'var(--ink)';
+          goodCard.style.boxShadow = '3px 3px 0 var(--ink)';
+        }
+        if (window.piko && window.piko.react) {
+          window.piko.react('hating-it', 2200);
+        }
+        tutorialStep = 1;
+      } else {
+        // Step 2: Slide right to Good Bacteria card, react loving-it, scale Piko to 1.4x!
+        if (mascotEl) {
+          mascotEl.style.transform = 'translateX(65px) scale(1.4)';
+        }
+        if (goodCard) {
+          goodCard.style.transform = 'scale(1.06)';
+          goodCard.style.borderColor = 'var(--relish)';
+          goodCard.style.boxShadow = '0 0 12px var(--relish)';
+        }
+        if (badCard) {
+          badCard.style.transform = 'scale(1)';
+          badCard.style.borderColor = 'var(--ink)';
+          badCard.style.boxShadow = '3px 3px 0 var(--ink)';
+        }
+        if (window.piko && window.piko.react) {
+          window.piko.react('loving-it', 2200);
+        }
+        tutorialStep = 0;
+      }
+    }
+
+    runStep();
+    tutorialInterval = setInterval(runStep, 2500);
+  }
+
+  function stopTutorialLoop() {
+    if (tutorialInterval) {
+      clearInterval(tutorialInterval);
+      tutorialInterval = null;
+    }
+    // Restore Piko container styles when exiting tutorial!
+    const mascotEl = document.getElementById('piko-reaction-container');
+    if (mascotEl) {
+      mascotEl.style.transform = '';
+    }
+    const badCard = document.getElementById('mold-tut-bad-card');
+    const goodCard = document.getElementById('mold-tut-good-card');
+    if (badCard) {
+      badCard.style.transform = '';
+      badCard.style.borderColor = '';
+      badCard.style.boxShadow = '';
+    }
+    if (goodCard) {
+      goodCard.style.transform = '';
+      goodCard.style.borderColor = '';
+      goodCard.style.boxShadow = '';
+    }
+  }
+
+  function enterArcadeMode() {
+    const workspaceCard = document.querySelector('#vinegar .tool-workspace-card');
+    if (workspaceCard) {
+      workspaceCard.classList.add('is-arcade-active');
+    }
+    document.body.style.overflow = 'hidden'; // lock scroll!
+    if (btnExitMoldArcade) btnExitMoldArcade.style.display = 'block'; // show exit button!
+    stopTutorialLoop();
+  }
+
+  function exitArcadeMode() {
+    isPlaying = false;
+    clearInterval(gameTimer);
+    clearInterval(drainInterval);
+    clearTimeout(spawnTimer);
+    
+    stopInteractiveTutorial();
+    
+    const workspaceCard = document.querySelector('#vinegar .tool-workspace-card');
+    if (workspaceCard) {
+      workspaceCard.classList.remove('is-arcade-active');
+    }
+    document.body.style.overflow = ''; // unlock scroll!
+    if (btnExitMoldArcade) btnExitMoldArcade.style.display = 'none'; // hide exit button!
+    
+    overlay.style.display = 'flex';
+    overlayScore.style.display = 'none';
+    nameEntry.style.display = 'none';
+    overlayTitle.textContent = "Protect the Jar!";
+    overlayDesc.textContent = "Tap the 🦠 but NEVER tap the 🧫. Ready?";
+    btnStart.textContent = "Start Game! 🕹️";
+    btnStart.style.display = 'inline-block';
+    btnShowGuide.style.display = 'inline-block';
+    
+    startTutorialLoop();
+  }
+
+  function startInteractiveTutorial() {
+    enterArcadeMode();
+    overlay.style.display = 'none';
+    
+    if (window.piko && window.piko.setContext) {
+      window.piko.setContext('game-tutorial');
+    }
+
+    const badCard = document.getElementById('mold-tut-bad-card');
+    const goodCard = document.getElementById('mold-tut-good-card');
+    const mascotEl = document.getElementById('piko-reaction-container');
+
+    function runTutorialStep(step) {
+      if (step === 0) {
+        if (mascotEl) mascotEl.style.transform = 'translateX(-65px) scale(1.4)';
+        if (badCard) {
+          badCard.style.transform = 'scale(1.1)';
+          badCard.style.borderColor = 'var(--rust)';
+          badCard.style.boxShadow = '0 0 16px var(--rust)';
+        }
+        if (goodCard) {
+          goodCard.style.transform = 'scale(1)';
+          goodCard.style.borderColor = '';
+          goodCard.style.boxShadow = '';
+        }
+        if (window.piko && window.piko.react) {
+          window.piko.react('hating-it');
+        }
+        if (window.piko && window.piko.say) {
+          window.piko.say('🦠 TAPPING MOLD EARNS POINTS! GO FAST! ❌', [
+            { text: 'Got it! 👉', action: () => runTutorialStep(1) }
+          ]);
+        }
+      } else if (step === 1) {
+        if (mascotEl) mascotEl.style.transform = 'translateX(65px) scale(1.4)';
+        if (goodCard) {
+          goodCard.style.transform = 'scale(1.1)';
+          goodCard.style.borderColor = 'var(--relish)';
+          goodCard.style.boxShadow = '0 0 16px var(--relish)';
+        }
+        if (badCard) {
+          badCard.style.transform = 'scale(1)';
+          badCard.style.borderColor = '';
+          badCard.style.boxShadow = '';
+        }
+        if (window.piko && window.piko.react) {
+          window.piko.react('loving-it');
+        }
+        if (window.piko && window.piko.say) {
+          window.piko.say('🧫 BUT AVOID GOOD BACTERIA! IT COSTS A LIFE! ❤️', [
+            { text: 'Start Game! ⚡', action: () => {
+              stopInteractiveTutorial();
+              startCountdown();
+            }}
+          ]);
+        }
+      }
+    }
+
+    runTutorialStep(0);
+  }
+
+  function stopInteractiveTutorial() {
+    if (window.piko && window.piko.say) {
+      window.piko.say('');
+    }
+    const mascotEl = document.getElementById('piko-reaction-container');
+    if (mascotEl) mascotEl.style.transform = '';
+    const badCard = document.getElementById('mold-tut-bad-card');
+    const goodCard = document.getElementById('mold-tut-good-card');
+    if (badCard) {
+      badCard.style.transform = '';
+      badCard.style.borderColor = '';
+      badCard.style.boxShadow = '';
+    }
+    if (goodCard) {
+      goodCard.style.transform = '';
+      goodCard.style.borderColor = '';
+      goodCard.style.boxShadow = '';
+    }
   }
 
   function startCountdown() {
+    enterArcadeMode();
+    stopTutorialLoop();
+    stopInteractiveTutorial();
+    
+    // Smooth glide Piko from tutorial shelf to the active Timer card header!
+    if (window.piko && window.piko.setContext) {
+      window.piko.setContext('game-active');
+    }
+
     overlayTitle.textContent = "Get Ready!";
     btnStart.style.display = 'none';
     btnShowGuide.style.display = 'none';
+    if (btnExitMoldArcade) btnExitMoldArcade.style.display = 'none'; // hide exit button during active play
     
     let count = 3;
     overlayDesc.textContent = count;
@@ -124,6 +358,13 @@
     if (isFrozen) return; // Time freeze power-up
     timeLeft--;
     timerDisplay.textContent = timeLeft + 's';
+
+    // 10 Second countdown panic trigger
+    if (timeLeft === 10) {
+      if (window.piko && window.piko.react) {
+        window.piko.react('panic', 10000); // Trigger sweating panic loop
+      }
+    }
 
     if (timeLeft <= 0) {
       endGame();
@@ -286,11 +527,26 @@
     overlayScore.textContent = score;
     
     nameEntry.style.display = score > 0 ? 'block' : 'none';
-    window.piko.react('win', 5000);
+    
+    // Choose dynamic post-game reaction based on target score threshold (100)
+    if (window.piko && window.piko.react) {
+      window.piko.react(score >= 100 ? 'win' : 'fail', 5000);
+    }
     
     btnStart.textContent = "Play Again";
     btnStart.style.display = 'inline-block';
     btnShowGuide.style.display = 'inline-block';
+    if (btnExitMoldArcade) btnExitMoldArcade.style.display = 'block';
+
+    // After celebration completes, resume attract-mode loop if still on this tab and not in arcade mode
+    setTimeout(() => {
+      const hash = window.location.hash.replace('#', '') || 'home';
+      const workspaceCard = document.querySelector('#vinegar .tool-workspace-card');
+      const isArcade = workspaceCard && workspaceCard.classList.contains('is-arcade-active');
+      if (!isPlaying && hash === 'vinegar' && !isArcade) {
+        startTutorialLoop();
+      }
+    }, 5200);
   }
 
   init();

@@ -37,6 +37,11 @@
         page.classList.remove('is-active', 'is-visible');
       }
     });
+
+    // Update Mascot Context on tab switch (smooth-glide transitions)
+    if (window.piko && window.piko.setContext) {
+      window.piko.setContext(id === 'home' ? 'home' : 'game-idle');
+    }
   }
 
   tabBtns.forEach(btn => {

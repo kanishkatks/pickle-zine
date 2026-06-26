@@ -143,3 +143,90 @@
   animation: neonPulse 2s ease-in-out infinite;
   text-shadow: 0 0 10px var(--relish), 0 0 30px rgba(200,230,58,0.3);
 }
+
+/* ── PIKO MASCOT PUPPET ANIMATIONS ─────────────────────────── */
+@keyframes pikoWavePuppet {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  20% {
+    transform: scale(1.04, 0.96) rotate(-4deg);
+  }
+  40% {
+    transform: scale(0.96, 1.04) rotate(4deg);
+  }
+  60% {
+    transform: scale(1.02, 0.98) rotate(-2deg);
+  }
+  80% {
+    transform: scale(0.98, 1.02) rotate(2deg);
+  }
+}
+
+.piko-wave-puppet {
+  transform-origin: bottom center;
+  animation: pikoWavePuppet 1.2s ease-in-out infinite;
+}
+
+/* ── PIKO PHYSICAL CEILING DROP & LANDING BOUNCE ───────────── */
+@keyframes pikoLandBounce {
+  0% {
+    transform: translate(var(--piko-tx, 0%), 150px) scaleY(1.2) scaleX(0.8); /* Sliding up from below! */
+    opacity: 0;
+  }
+  50% {
+    transform: translate(var(--piko-tx, 0%), 0) scaleY(1.1) scaleX(0.9);
+    opacity: 1;
+  }
+  65% {
+    transform: translate(var(--piko-tx, 0%), 15px) scaleY(0.7) scaleX(1.3); /* Tactile squish impact! */
+  }
+  80% {
+    transform: translate(var(--piko-tx, 0%), -8px) scaleY(1.1) scaleX(0.9); /* Rebound bounce */
+  }
+  95% {
+    transform: translate(var(--piko-tx, 0%), 3px) scaleY(0.95) scaleX(1.05);
+  }
+  100% {
+    transform: translate(var(--piko-tx, 0%), 0) scaleY(1) scaleX(1);
+    opacity: 1;
+  }
+}
+
+.piko-land-bounce {
+  transform-origin: bottom center;
+  animation: pikoLandBounce 0.95s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+/* ── PIKO REACT/SPEAK POP EFFECT ───────────────────────────── */
+@keyframes pikoPop {
+  0% {
+    transform: var(--piko-base-transform) scale(1);
+  }
+  30% {
+    transform: var(--piko-base-transform) scale(1.15, 0.85) rotate(3deg);
+  }
+  60% {
+    transform: var(--piko-base-transform) scale(0.9, 1.1) rotate(-2deg);
+  }
+  100% {
+    transform: var(--piko-base-transform) scale(1);
+  }
+}
+
+.piko-pop {
+  animation: pikoPop 0.4s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+/* ── PIKO AUTH GATE PEEK LOOP (Sandwiched) ────────────────── */
+@keyframes authPeekLoop {
+  0%, 15% { transform: translateY(160px) scale(2.0); } /* Hidden below */
+  35%, 65% { transform: translateY(22px) scale(2.0); } /* Peeking up as a solid block */
+  100% { transform: translateY(160px) scale(2.0); } /* Slides back down */
+}
+
+.piko-context-auth img,
+.piko-context-auth video {
+  transform-origin: top center;
+  animation: authPeekLoop 4s infinite ease-in-out;
+}
