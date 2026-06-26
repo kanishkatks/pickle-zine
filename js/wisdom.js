@@ -74,6 +74,8 @@
       if (window.piko && window.piko.showTutorialCards) {
         window.piko.showTutorialCards([{
           img: 'assets/piko/wisdom.png',
+          imgSize: 200,
+          imgClass: 'piko-reading',
           text: '"' + quotes[idx] + '"',
           items: [],
           btnText: (window.i18n ? window.i18n.t('wisdom.close_btn') : 'Cool!') + ' 🥒'

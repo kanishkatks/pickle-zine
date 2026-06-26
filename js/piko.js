@@ -373,7 +373,7 @@
 
       tutModal.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; gap:var(--gap-sm); padding:var(--gap-lg); max-width:340px;">
-          <img src="${card.img}" style="width:150px; height:150px; object-fit:contain;" />
+          <img src="${card.img}" class="piko-modal-img ${card.imgClass || ''}" style="width:${card.imgSize || 150}px; height:${card.imgSize || 150}px; object-fit:contain;" />
           <div class="piko-speech-bubble" style="max-width:300px; font-size:14px;">${card.text}</div>
           ${card.items ? `<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:var(--gap-xs) 0;">${card.items.map(item =>
             `<div style="background:var(--bg-surface); border:2px solid var(--ink); border-radius:var(--radius-md); padding:4px 8px; font-size:12px; font-weight:700; box-shadow:2px 2px 0 var(--ink);">${item}</div>`
