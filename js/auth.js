@@ -41,32 +41,18 @@
   function unlockApp(animate) {
     document.body.classList.remove('is-locked');
     if (animate) {
-      // Move Piko out of auth gate before removing it
-      if (window.piko && window.piko.setContext) {
-        window.piko.setContext('home');
-      }
+      authGate.classList.add('is-unlocked');
+      setTimeout(() => authGate.remove(), 500);
+      if (window.db) window.db.trackAppUnlock();
 
-      const pikoEl = document.getElementById('piko-reaction-container');
-      if (pikoEl) pikoEl.classList.add('piko-unlock-celebrate');
-
-      if (window.piko && window.piko.react) {
-        window.piko.react('unlock', 2000, true);
-        window.piko.speech("ACCESS GRANTED!", 1800);
-      }
-
-      setTimeout(() => {
-        if (pikoEl) pikoEl.classList.remove('piko-unlock-celebrate');
-        authGate.classList.add('is-unlocked');
-
-        setTimeout(() => authGate.remove(), 800);
-        if (window.db) window.db.trackAppUnlock();
-
-        setTimeout(() => {
+      // Show celebration modal, then start walkthrough
+      if (window.piko && window.piko.showCelebrationModal) {
+        window.piko.showCelebrationModal(() => {
           if (window.piko && window.piko.startGuidedWalkthrough) {
             window.piko.startGuidedWalkthrough();
           }
-        }, 2000);
-      }, reducedMotion ? 0 : 600);
+        });
+      }
     } else {
       authGate.remove();
     }

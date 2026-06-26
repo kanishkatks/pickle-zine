@@ -176,154 +176,176 @@
     }
   }
 
-  // Interactive Guided App Walkthrough Loop
+  // ── Celebration Modal ──────────────────────────────────────
+  function showCelebrationModal(callback) {
+    let modal = document.getElementById('piko-celebration-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'piko-celebration-modal';
+      modal.className = 'wisdom-modal-overlay';
+      modal.style.cursor = 'pointer';
+      modal.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:var(--gap-md);">
+          <img src="assets/piko/celebrate.png" style="width:200px; height:200px; object-fit:contain;" />
+          <div class="piko-speech-bubble" style="max-width:280px; font-size:1.4rem;">ACCESS GRANTED!</div>
+          <div id="celebration-subtitle" style="color:var(--bg); font-family:var(--font-display); font-size:13px; opacity:0.8; margin-top:var(--gap-sm);">Tap to continue</div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    modal.classList.add('is-active');
+
+    function dismiss() {
+      modal.removeEventListener('click', dismiss);
+      modal.classList.remove('is-active');
+      setTimeout(() => {
+        modal.remove();
+        if (callback) callback();
+      }, 300);
+    }
+
+    // Tap to dismiss or auto-dismiss after 5s
+    modal.addEventListener('click', dismiss);
+    setTimeout(dismiss, 5000);
+  }
+
+  // ── Simplified Walkthrough (Full-screen modal style) ───────
   let currentStep = 0;
+  let walkthroughModal = null;
+
   const STEPS = [
     {
-      text: "Welcome to The Global Pickle Zine! I'm Piko, your brine buddy. 🥒 Let me show you around!",
+      text: "Hey! I'm Piko! I need your help with a few things...",
       tab: 'home',
-      btnText: 'Show me! 👉'
+      img: 'assets/piko/intro.png',
+      btnText: 'What do you need?'
     },
     {
-      text: "This is the Hub! Check out your stats, view high scores, and unlock premium stickers.",
-      tab: 'home',
-      btnText: 'Next Game 🕹️'
-    },
-    {
-      text: "Tap the Vinegar bottle to play Whack-A-Mold! Save the fermentation jar from fuzzy spores. 🦠",
+      text: "My jar is under attack! Help me whack the mold before it spreads!",
       tab: 'vinegar',
-      btnText: 'Next Game ⚡'
+      img: 'assets/piko/panic.png',
+      btnText: 'I got you!'
     },
     {
-      text: "Tap the Bolt to play Sour Blitz! Test your chemistry knowledge on the pH sourness spectrum. 🧪",
+      text: "I need to find my comfort zone on the sourness scale. What's sour and what's not?",
       tab: 'ph-scale',
-      btnText: 'Final Tip 💡'
+      img: 'assets/piko/sour.png',
+      btnText: 'Easy!'
     },
     {
-      text: "And click 'Reveal Brine Wisdom' anytime at the bottom to get fun facts! Let's get pickling! 📖",
+      text: "Oh and I know EVERYTHING about pickles. Hit the Brine Wisdom button anytime for fun facts!",
       tab: 'home',
-      btnText: 'Got it! 🥒'
+      img: 'assets/piko/wisdom.png',
+      btnText: "Let's go!"
     }
   ];
 
+  function getWalkthroughModal() {
+    if (!walkthroughModal) {
+      walkthroughModal = document.createElement('div');
+      walkthroughModal.id = 'piko-walkthrough-modal';
+      walkthroughModal.className = 'wisdom-modal-overlay';
+      document.body.appendChild(walkthroughModal);
+    }
+    return walkthroughModal;
+  }
+
   function showWalkthroughStep(index) {
     if (index >= STEPS.length) {
-      clearSpeech();
+      const modal = getWalkthroughModal();
+      modal.classList.remove('is-active');
+      setTimeout(() => modal.remove(), 300);
+      walkthroughModal = null;
+      setContext('home');
       react('idle', Infinity);
       localStorage.setItem('zine-walkthrough-completed', 'true');
       return;
     }
-    
+
     currentStep = index;
     const step = STEPS[index];
-    
-    // Switch tabs programmatically
+    const isLast = index === STEPS.length - 1;
+
     window.location.hash = '#' + step.tab;
-    
-    // Let Piko glide first, then display speech bubble
-    setTimeout(() => {
-      react('intro', Infinity);
-      
-      const buttonsHTML = `
-        <button id="piko-wt-next" class="bttn-jelly bttn-xs custom-btn-relish neo-btn-shadow" style="font-weight:700; font-size:11px; padding:4px 10px; font-family:var(--font-display); width: auto;">
-          ${step.btnText}
-        </button>
-        ${index < STEPS.length - 1 ? `
-          <button id="piko-wt-skip" class="bttn-jelly bttn-xs custom-btn-wisdom neo-btn-shadow" style="font-weight:700; font-size:11px; padding:4px 10px; font-family:var(--font-display); background:#ececec; color:#222; border-color:#222; width: auto;">
-            Skip
+
+    const modal = getWalkthroughModal();
+    modal.innerHTML = `
+      <div style="display:flex; flex-direction:column; align-items:center; gap:var(--gap-md); padding:var(--gap-lg);">
+        <img src="${step.img}" style="width:180px; height:180px; object-fit:contain;" />
+        <div class="piko-speech-bubble" style="max-width:300px; font-size:15px;">${step.text}</div>
+        <div style="display:flex; gap:var(--gap-sm); pointer-events:auto;">
+          <button id="piko-wt-next" style="background:var(--relish); color:var(--bg); border:2px solid var(--ink); border-radius:var(--radius-md); padding:8px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; cursor:pointer; box-shadow:3px 3px 0 var(--ink);">
+            ${step.btnText}
           </button>
-        ` : ''}
-      `;
-      
-      speech(step.text, Infinity, buttonsHTML);
-      
-      // Bind action buttons after rendering
-      setTimeout(() => {
-        const nextBtn = document.getElementById('piko-wt-next');
-        const skipBtn = document.getElementById('piko-wt-skip');
-        
-        if (nextBtn) {
-          nextBtn.onclick = (e) => {
-            e.stopPropagation();
-            showWalkthroughStep(currentStep + 1);
-          };
-        }
-        if (skipBtn) {
-          skipBtn.onclick = (e) => {
-            e.stopPropagation();
-            clearSpeech();
-            react('idle', Infinity);
-            localStorage.setItem('zine-walkthrough-completed', 'true');
-          };
-        }
-      }, 50);
-    }, 450); // Match slide transition glide timing
+          ${!isLast ? `
+            <button id="piko-wt-skip" style="background:#ececec; color:#222; border:2px solid #222; border-radius:var(--radius-md); padding:8px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; cursor:pointer; box-shadow:3px 3px 0 #222;">
+              Skip
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+
+    modal.classList.add('is-active');
+
+    setTimeout(() => {
+      const nextBtn = document.getElementById('piko-wt-next');
+      const skipBtn = document.getElementById('piko-wt-skip');
+      if (nextBtn) {
+        nextBtn.onclick = (e) => {
+          e.stopPropagation();
+          showWalkthroughStep(currentStep + 1);
+        };
+      }
+      if (skipBtn) {
+        skipBtn.onclick = (e) => {
+          e.stopPropagation();
+          const m = getWalkthroughModal();
+          m.classList.remove('is-active');
+          setTimeout(() => m.remove(), 300);
+          walkthroughModal = null;
+          setContext('home');
+          react('idle', Infinity);
+          localStorage.setItem('zine-walkthrough-completed', 'true');
+        };
+      }
+    }, 50);
   }
 
   function startGuidedWalkthrough() {
-    clearSpeech();
-    
-    // 1. Initial drop-off sequence: Set to ceiling hang peek state first
     setContext('home');
-    container.classList.add('piko-peek');
-    
-    setTimeout(() => {
-      // 2. Remove peek, apply physical land-bounce animation class
-      container.classList.remove('piko-peek');
-      container.classList.add('piko-land-bounce');
-      
-      // Play waving hello welcome
-      react('intro', Infinity);
-      
-      // 3. Clean up landing bounce utility class after execution
-      setTimeout(() => {
-        container.classList.remove('piko-land-bounce');
-        // Start showing the first dialogue bubble
-        showWalkthroughStep(0);
-      }, 950);
-    }, 600);
+    showWalkthroughStep(0);
   }
 
+  // Global Access
   function say(text, buttons = []) {
-    if (!text) {
-      clearSpeech();
-      return;
-    }
-    
-    // Generate HTML for buttons if any
+    if (!text) { clearSpeech(); return; }
     let buttonsHTML = '';
     if (buttons && buttons.length > 0) {
       buttons.forEach((btn, idx) => {
         const btnId = `piko-say-btn-${idx}`;
-        const isWisdom = btn.text.toLowerCase().includes('got it') || btn.text.toLowerCase().includes('next');
-        const btnClass = isWisdom ? 'custom-btn-wisdom' : 'custom-btn-relish';
         buttonsHTML += `
-          <button id="${btnId}" class="bttn-jelly bttn-xs ${btnClass} neo-btn-shadow" style="font-weight:700; font-size:11px; padding:4px 10px; font-family:var(--font-display); width: auto; margin: 4px;">
+          <button id="${btnId}" style="background:var(--relish); color:var(--bg); border:2px solid var(--ink); border-radius:var(--radius-md); padding:4px 12px; font-family:var(--font-display); font-weight:700; font-size:11px; cursor:pointer; box-shadow:3px 3px 0 var(--ink); margin:4px;">
             ${btn.text}
           </button>
         `;
       });
     }
-
     speech(text, Infinity, buttonsHTML);
-
     if (buttons && buttons.length > 0) {
       setTimeout(() => {
         buttons.forEach((btn, idx) => {
           const btnEl = document.getElementById(`piko-say-btn-${idx}`);
           if (btnEl) {
-            btnEl.onclick = (e) => {
-              e.stopPropagation();
-              if (btn.action) btn.action();
-            };
+            btnEl.onclick = (e) => { e.stopPropagation(); if (btn.action) btn.action(); };
           }
         });
       }, 50);
     }
   }
 
-  // Global Access
-  window.piko = { react, setContext, speech, clearSpeech, startGuidedWalkthrough, say };
+  window.piko = { react, setContext, speech, clearSpeech, startGuidedWalkthrough, showCelebrationModal, say };
 
   // Initial boot coordinate selector
   window.addEventListener('load', () => {
