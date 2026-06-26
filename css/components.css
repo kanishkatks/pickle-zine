@@ -596,18 +596,10 @@ body.is-locked {
   }
 }
 
-/* 1. Home Hub Sitting Position */
+/* 1. Home Hub — Piko hidden */
 .piko-context-home {
-  top: 160px;
-  bottom: auto;
-  left: auto;
-  right: calc(50% - 215px + 20px);
-  width: 140px;
-  height: 140px;
-  --piko-tx: 0%;
-  --piko-base-transform: translateY(0) rotate(0deg);
-  transform: var(--piko-base-transform);
-  opacity: 1;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Home Hub Peeking State (Hangs upside down from browser ceiling) */
