@@ -410,13 +410,18 @@
       window.piko.setContext('game-tutorial');
     }
 
+    const pikoEl = document.getElementById('piko-reaction-container');
+    const spot = document.getElementById('piko-blitz-spot');
+    if (pikoEl && spot && pikoEl.parentNode !== spot) {
+      spot.appendChild(pikoEl);
+      pikoEl.style.position = 'relative';
+    }
+
     const pointer = document.getElementById('ph-scale-pointer');
     const labelAcid = document.getElementById('ph-label-acid');
     const labelNeutral = document.getElementById('ph-label-neutral');
     const labelAlk = document.getElementById('ph-label-alk');
     const feedbackText = document.getElementById('ph-scale-feedback-text');
-    const mascotEl = document.getElementById('piko-reaction-container');
-
     function runStep() {
       if (isPlaying) return;
       
@@ -438,9 +443,6 @@
         if (labelAlk) {
           labelAlk.style.transform = '';
           labelAlk.style.fontWeight = '';
-        }
-        if (mascotEl) {
-          mascotEl.style.transform = 'translateX(-65px) scale(1.4)';
         }
         if (window.piko && window.piko.react) {
           window.piko.react('extreme-sour', 2200);
@@ -465,9 +467,6 @@
           labelNeutral.style.transform = '';
           labelNeutral.style.fontWeight = '';
         }
-        if (mascotEl) {
-          mascotEl.style.transform = 'translateX(65px) scale(1.4)';
-        }
         if (window.piko && window.piko.react) {
           window.piko.react('opposite-sour', 2200);
         }
@@ -491,9 +490,6 @@
           labelAlk.style.transform = '';
           labelAlk.style.fontWeight = '';
         }
-        if (mascotEl) {
-          mascotEl.style.transform = 'translateX(0px) scale(1.4)';
-        }
         if (window.piko && window.piko.react) {
           window.piko.react('idle', 2200);
         }
@@ -511,10 +507,6 @@
       tutorialInterval = null;
     }
     // Clean up temporary coordinate overrides and tasting labels
-    const mascotEl = document.getElementById('piko-reaction-container');
-    if (mascotEl) {
-      mascotEl.style.transform = '';
-    }
     const pointer = document.getElementById('ph-scale-pointer');
     if (pointer) pointer.style.left = '50%';
     const labelAcid = document.getElementById('ph-label-acid');
