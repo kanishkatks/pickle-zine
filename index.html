@@ -339,15 +339,13 @@
          PAGE: LEADERBOARD
     ═══════════════════════════════════════════════════════ -->
     <section class="page" id="page-leaderboard" data-page="leaderboard" role="tabpanel">
-      <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--ink); margin-bottom:var(--gap-sm); text-shadow:2px 2px 0 var(--brine-muted);">🌍 <span data-i18n="ph.leaderboard">Global Leaderboard</span></h2>
-      <div class="result-block-highlight" style="display:block;">
-        <div class="ph-readout neo-brutalist-inner" style="border:2px solid var(--ink); box-shadow:none; background:var(--mustard);">
-          <div style="grid-column: 1 / -1; display:flex; justify-content:flex-end; align-items:center; padding-bottom:8px; margin-bottom:12px; border-bottom:2px solid var(--ink);">
-            <button id="btn-refresh-leaderboard" class="bttn-stretch bttn-sm" style="background:var(--bg); color:var(--ink); padding:4px 8px; font-size:10px;">🔄 <span data-i18n="ph.refresh">Refresh</span></button>
-          </div>
-          <div id="leaderboard-list" style="grid-column: 1 / -1; width:100%; font-family:var(--font-mono); font-size:14px; line-height:1.8;">
-            <div data-i18n="ph.loading" style="text-align:center; color:var(--ink-muted);">Loading scores...</div>
-          </div>
+      <div class="heading-block neo-brutalist" style="flex:1; background:var(--mustard);">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:var(--gap-sm);">
+          <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--ink); text-shadow:2px 2px 0 var(--brine-muted); margin:0;">🏆 <span data-i18n="ph.leaderboard">Global Leaderboard</span></h2>
+          <button id="btn-refresh-leaderboard" class="neo-btn-shadow" style="background:var(--bg); color:var(--ink); padding:6px 12px; font-size:11px; font-family:var(--font-mono); font-weight:bold; border:2px solid var(--ink); border-radius:var(--radius-sm); cursor:pointer;">🔄 <span data-i18n="ph.refresh">Refresh</span></button>
+        </div>
+        <div id="leaderboard-list" style="width:100%; font-family:var(--font-mono); font-size:16px; line-height:2.2;">
+          <div data-i18n="ph.loading" style="text-align:center; color:var(--ink-muted);">Loading scores...</div>
         </div>
       </div>
     </section>
