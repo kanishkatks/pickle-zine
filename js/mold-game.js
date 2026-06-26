@@ -36,6 +36,7 @@
   let spawnTimer = null;
   let activeHole = null;
   let drainInterval = null;
+  let countdownTimer = null;
 
   // Mascot Tutorial State
   let tutorialInterval = null;
@@ -204,7 +205,9 @@
     clearInterval(gameTimer);
     clearInterval(drainInterval);
     clearTimeout(spawnTimer);
-    
+    clearInterval(countdownTimer);
+    countdownTimer = null;
+
     stopInteractiveTutorial();
     
     const workspaceCard = document.querySelector('#vinegar .tool-workspace-card');
@@ -326,12 +329,13 @@
     let count = 3;
     overlayDesc.textContent = count;
     
-    const countTimer = setInterval(() => {
+    countdownTimer = setInterval(() => {
       count--;
       if (count > 0) {
         overlayDesc.textContent = count;
       } else {
-        clearInterval(countTimer);
+        clearInterval(countdownTimer);
+        countdownTimer = null;
         startGame();
       }
     }, 1000);
@@ -446,6 +450,12 @@
       const type = hole.dataset.type;
       const hScore = parseInt(hole.dataset.score);
       const effect = hole.dataset.effect;
+
+      // Immediately deactivate black mold on click so score drain stops instantly
+      if (hole.dataset.species === 'black') {
+        hole.classList.remove('is-active');
+        hole.textContent = '';
+      }
 
       if (type === 'bad') {
         score += hScore;

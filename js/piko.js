@@ -11,7 +11,6 @@
     celebrate: { type: 'img', src: 'assets/piko/celebrate.png' },
     fail: { type: 'video', src: 'assets/piko/fail.mp4' },
     win: { type: 'video', src: 'assets/piko/win.mp4' },
-    streak: { type: 'video', src: 'assets/piko/streak.mp4' },
     sour: { type: 'img', src: 'assets/piko/sour.png' },
     'extreme-sour': { type: 'img', src: 'assets/piko/extreme-sour.png' },
     'opposite-sour': { type: 'img', src: 'assets/piko/opposite-sour.png' },
