@@ -10,9 +10,10 @@
 
   function getHash() {
     const h = window.location.hash.replace('#', '');
-    // Only accept valid tab ids
-    const valid = Array.from(tabBtns).map(b => b.dataset.tab);
-    return valid.includes(h) ? h : DEFAULT;
+    // Accept nav tabs + game pages (accessed from hub cards)
+    const validTabs = Array.from(tabBtns).map(b => b.dataset.tab);
+    const validPages = Array.from(pages).map(p => p.dataset.page);
+    return validPages.includes(h) ? h : DEFAULT;
   }
 
   function activateTab(id, instant) {
@@ -38,9 +39,13 @@
       }
     });
 
-    // Update Mascot Context on tab switch (smooth-glide transitions)
+    // Update Mascot Context on tab switch
     if (window.piko && window.piko.setContext) {
-      window.piko.setContext(id === 'home' ? 'home' : 'game-idle');
+      if (id === 'vinegar' || id === 'ph-scale') {
+        window.piko.setContext('game-idle');
+      } else {
+        window.piko.setContext('home');
+      }
     }
   }
 

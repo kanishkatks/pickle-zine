@@ -7,7 +7,7 @@
 
   /* ── GAME DATA ──────────────────────────────────────────── */
   const BASE_PH = 7.0; // Pure Water
-  const BLITZ_SECONDS = 60;
+  const BLITZ_SECONDS = 30;
 
   // A massive library of funky, weird, and everyday items
   const GAME_ITEMS = [
@@ -91,12 +91,12 @@
 
   /* ── LEADERBOARD LOGIC ──────────────────────────────────── */
   async function updateLeaderboardUI() {
-    leaderboardList.innerHTML = '<div style="text-align:center; color:var(--ink-muted);">Loading scores...</div>';
+    leaderboardList.innerHTML = '<div style="text-align:center; color:var(--ink-muted);">' + window.i18n.t('ph.loading') + '</div>';
     if (!window.db) return;
     
     const scores = await window.db.fetchLeaderboard();
     if (scores.length === 0) {
-      leaderboardList.innerHTML = '<div style="text-align:center; color:var(--ink-muted);">No scores yet! Be the first!</div>';
+      leaderboardList.innerHTML = '<div style="text-align:center; color:var(--ink-muted);">' + window.i18n.t('ph.no_scores') + '</div>';
       return;
     }
     
@@ -131,6 +131,9 @@
   }
 
   function exitArcadeMode() {
+    if (window.piko && window.piko.say) {
+      window.piko.say('');
+    }
     isPlaying = false;
     clearInterval(timerInterval);
     
@@ -146,93 +149,55 @@
     overlay.style.display = 'flex';
     overlayScore.style.display = 'none';
     arcadeEntry.style.display = 'none';
-    overlayTitle.textContent = "Sour Blitz! ⏱️";
-    overlayDesc.textContent = "You have 60 seconds to guess if funky items are MORE or LESS sour than Pure Water. Go fast!";
-    btnStart.textContent = "Start Game! 🕹️";
+    overlayTitle.textContent = window.i18n.t('ph.title') + " ⏱️";
+    overlayDesc.textContent = window.i18n.t('ph.desc');
+    btnStart.textContent = window.i18n.t('ph.start') + " 🕹️";
     btnStart.style.display = 'inline-block';
     if (btnShowGuide) btnShowGuide.style.display = 'inline-block';
     
     emojiDisplay.textContent = "🍋";
-    nameDisplay.textContent = "Sour Blitz";
+    nameDisplay.textContent = window.i18n.t('ph.title');
     
     startTutorialLoop();
   }
 
   function startInteractiveTutorial() {
-    enterArcadeMode();
-    overlay.style.display = 'none';
-    
-    if (window.piko && window.piko.setContext) {
-      window.piko.setContext('game-tutorial');
+    if (window.piko && window.piko.showTutorialCards) {
+      window.piko.showTutorialCards([
+        {
+          img: 'assets/piko/extreme-sour.png',
+          text: 'LOW pH = MORE SOUR! Lemons, pickles, stomach acid...',
+          items: ['🍋 Lemon pH 2', '🥒 Pickle pH 3.5', '☕ Coffee pH 5'],
+          btnText: 'Next 👉'
+        },
+        {
+          img: 'assets/piko/opposite-sour.png',
+          text: 'HIGH pH = LESS SOUR! Soap, bleach, baking soda...',
+          items: ['🧼 Soap pH 10', '🥚 Egg pH 8', '🧽 Cleaner pH 14'],
+          btnText: 'Next 👉'
+        },
+        {
+          img: 'assets/piko/base.png',
+          text: 'Compare everything to PURE WATER at pH 7.0 — is it MORE or LESS sour?',
+          items: ['💧 Water = pH 7.0'],
+          btnText: 'Next 👉'
+        },
+        {
+          img: 'assets/piko/panic.png',
+          text: '30 seconds! How many can you guess? GO FAST!',
+          items: [],
+          btnText: "LET'S GO! ⚡",
+          secondaryBtnText: 'Not now'
+        }
+      ], () => {
+        startBlitz();
+      });
     }
-
-    const pointer = document.getElementById('ph-scale-pointer');
-    const labelAcid = document.getElementById('ph-label-acid');
-    const labelNeutral = document.getElementById('ph-label-neutral');
-    const labelAlk = document.getElementById('ph-label-alk');
-    const feedbackText = document.getElementById('ph-scale-feedback-text');
-
-    function runTutorialStep(step) {
-      if (step === 0) {
-        if (pointer) pointer.style.left = '15%';
-        if (labelAcid) labelAcid.style.transform = 'scale(1.2)';
-        if (labelNeutral) labelNeutral.style.transform = 'scale(1)';
-        if (labelAlk) labelAlk.style.transform = 'scale(1)';
-        if (feedbackText) {
-          feedbackText.textContent = '🍋 pH 3.0: Puckering & Acidic!';
-          feedbackText.style.color = 'var(--rust)';
-        }
-        if (window.piko && window.piko.react) {
-          window.piko.react('extreme-sour');
-        }
-        if (window.piko && window.piko.say) {
-          window.piko.say('🍋 LOW pH ITEMS (1-6) ARE MORE SOUR THAN PURE WATER! 🍋', [
-            { text: 'Got it! 👉', action: () => runTutorialStep(1) }
-          ]);
-        }
-      } else if (step === 1) {
-        if (pointer) pointer.style.left = '85%';
-        if (labelAlk) labelAlk.style.transform = 'scale(1.2)';
-        if (labelAcid) labelAcid.style.transform = 'scale(1)';
-        if (labelNeutral) labelNeutral.style.transform = 'scale(1)';
-        if (feedbackText) {
-          feedbackText.textContent = '🫧 pH 10.0: Soapy & Alkaline!';
-          feedbackText.style.color = '#5f4bff';
-        }
-        if (window.piko && window.piko.react) {
-          window.piko.react('opposite-sour');
-        }
-        if (window.piko && window.piko.say) {
-          window.piko.say('🫧 HIGH pH ITEMS (8-14) ARE LESS SOUR! GUESS FAST! 🫧', [
-            { text: 'Start Blitz! ⚡', action: () => {
-              stopInteractiveTutorial();
-              startBlitz();
-            }}
-          ]);
-        }
-      }
-    }
-
-    runTutorialStep(0);
   }
 
   function stopInteractiveTutorial() {
     if (window.piko && window.piko.say) {
       window.piko.say('');
-    }
-    const pointer = document.getElementById('ph-scale-pointer');
-    const labelAcid = document.getElementById('ph-label-acid');
-    const labelNeutral = document.getElementById('ph-label-neutral');
-    const labelAlk = document.getElementById('ph-label-alk');
-    const feedbackText = document.getElementById('ph-scale-feedback-text');
-
-    if (pointer) pointer.style.left = '50%';
-    if (labelAcid) labelAcid.style.transform = '';
-    if (labelNeutral) labelNeutral.style.transform = '';
-    if (labelAlk) labelAlk.style.transform = '';
-    if (feedbackText) {
-      feedbackText.textContent = 'TASTING SPECTRA...';
-      feedbackText.style.color = '';
     }
   }
 
@@ -289,44 +254,48 @@
     btnMoreSour.disabled = true;
     btnLessSour.disabled = true;
 
-    overlay.style.display = 'flex';
-    overlayTitle.textContent = "Time's Up!";
-    overlayDesc.textContent = "Your final Sour Blitz score is:";
-    overlayScore.style.display = 'block';
-    overlayScore.textContent = score;
-    
-    if (btnExitBlitzArcade) btnExitBlitzArcade.style.display = 'block'; // Make sure exit arcade button is visible!
-    
-    if (score > 0) {
-      arcadeEntry.style.display = 'block';
-      btnStart.style.display = 'none';
-      if (btnShowGuide) btnShowGuide.style.display = 'none';
-      arcadeInput.value = '';
-      arcadeInput.focus();
-      
-      if (window.piko && window.piko.react) {
-        window.piko.react(score >= 800 ? 'win' : 'fail', 5000);
-      }
-    } else {
-      btnStart.textContent = "Play Again!";
-      btnStart.style.display = 'block';
-      if (btnShowGuide) btnShowGuide.style.display = 'block';
-      if (window.piko && window.piko.react) {
-        window.piko.react('fail', 5000);
-      }
-    }
-    
+    btnMoreSour.disabled = true;
+    btnLessSour.disabled = true;
     emojiDisplay.textContent = "🏁";
-    nameDisplay.textContent = "Game Over";
+    nameDisplay.textContent = window.i18n.t('ph.game_over');
 
-    setTimeout(() => {
-      const hash = window.location.hash.replace('#', '') || 'home';
-      const workspaceCard = document.querySelector('#ph-scale .tool-workspace-card');
-      const isArcade = workspaceCard && workspaceCard.classList.contains('is-arcade-active');
-      if (!isPlaying && hash === 'ph-scale' && !isArcade) {
-        startTutorialLoop();
-      }
-    }, 5200);
+    const celebImg = score > 0 ? 'assets/piko/celebrate.png' : 'assets/piko/denied.png';
+    const celebText = score > 0 ? "Time's Up! Great taste!" : "Time's Up! Keep practicing!";
+
+    if (window.piko && window.piko.showTutorialCards) {
+      window.piko.showTutorialCards([{
+        img: celebImg,
+        text: celebText + '\n\nScore: ' + score,
+        items: [],
+        btnText: score > 0 ? 'Submit Score' : 'Try Again'
+      }], () => {
+        overlay.style.display = 'flex';
+        overlayTitle.textContent = window.i18n.t('ph.times_up');
+        overlayDesc.textContent = window.i18n.t('ph.final_score');
+        overlayScore.style.display = 'block';
+        overlayScore.textContent = score;
+        if (btnExitBlitzArcade) btnExitBlitzArcade.style.display = 'block';
+        if (score > 0) {
+          arcadeEntry.style.display = 'block';
+          btnStart.style.display = 'none';
+          if (btnShowGuide) btnShowGuide.style.display = 'none';
+          arcadeInput.value = '';
+          arcadeInput.focus();
+        } else {
+          btnStart.textContent = window.i18n.t('ph.play_again');
+          btnStart.style.display = 'block';
+          if (btnShowGuide) btnShowGuide.style.display = 'block';
+        }
+      });
+    } else {
+      overlay.style.display = 'flex';
+      overlayScore.style.display = 'block';
+      overlayScore.textContent = score;
+      btnStart.textContent = window.i18n.t('ph.play_again');
+      btnStart.style.display = 'block';
+      if (btnExitBlitzArcade) btnExitBlitzArcade.style.display = 'block';
+    }
+
   }
 
   function nextItem() {
@@ -407,13 +376,18 @@
       window.piko.setContext('game-tutorial');
     }
 
+    const pikoEl = document.getElementById('piko-reaction-container');
+    const spot = document.getElementById('piko-blitz-spot');
+    if (pikoEl && spot && pikoEl.parentNode !== spot) {
+      spot.appendChild(pikoEl);
+      pikoEl.style.position = 'relative';
+    }
+
     const pointer = document.getElementById('ph-scale-pointer');
     const labelAcid = document.getElementById('ph-label-acid');
     const labelNeutral = document.getElementById('ph-label-neutral');
     const labelAlk = document.getElementById('ph-label-alk');
     const feedbackText = document.getElementById('ph-scale-feedback-text');
-    const mascotEl = document.getElementById('piko-reaction-container');
-
     function runStep() {
       if (isPlaying) return;
       
@@ -436,11 +410,8 @@
           labelAlk.style.transform = '';
           labelAlk.style.fontWeight = '';
         }
-        if (mascotEl) {
-          mascotEl.style.transform = 'translateX(-65px) scale(1.4)';
-        }
         if (window.piko && window.piko.react) {
-          window.piko.react('extreme-sour', 2200);
+          window.piko.react('extreme-sour', 3400);
         }
         tutorialStep = 1;
       } else if (tutorialStep === 1) {
@@ -462,11 +433,8 @@
           labelNeutral.style.transform = '';
           labelNeutral.style.fontWeight = '';
         }
-        if (mascotEl) {
-          mascotEl.style.transform = 'translateX(65px) scale(1.4)';
-        }
         if (window.piko && window.piko.react) {
-          window.piko.react('opposite-sour', 2200);
+          window.piko.react('opposite-sour', 3400);
         }
         tutorialStep = 2;
       } else {
@@ -488,18 +456,15 @@
           labelAlk.style.transform = '';
           labelAlk.style.fontWeight = '';
         }
-        if (mascotEl) {
-          mascotEl.style.transform = 'translateX(0px) scale(1.4)';
-        }
         if (window.piko && window.piko.react) {
-          window.piko.react('idle', 2200);
+          window.piko.react('idle', 3400);
         }
         tutorialStep = 0;
       }
     }
 
     runStep();
-    tutorialInterval = setInterval(runStep, 2500);
+    tutorialInterval = setInterval(runStep, 3500);
   }
 
   function stopTutorialLoop() {
@@ -508,10 +473,6 @@
       tutorialInterval = null;
     }
     // Clean up temporary coordinate overrides and tasting labels
-    const mascotEl = document.getElementById('piko-reaction-container');
-    if (mascotEl) {
-      mascotEl.style.transform = '';
-    }
     const pointer = document.getElementById('ph-scale-pointer');
     if (pointer) pointer.style.left = '50%';
     const labelAcid = document.getElementById('ph-label-acid');
@@ -531,12 +492,13 @@
       labelAlk.style.fontWeight = '';
     }
     if (feedbackText) {
-      feedbackText.textContent = 'TASTING SPECTRA...';
+      feedbackText.textContent = window.i18n.t('ph.tasting_spectra');
       feedbackText.style.color = '';
     }
   }
 
   function handlePageChange() {
+    if (window.walkthroughActive) return;
     const hash = window.location.hash.replace('#', '') || 'home';
     if (hash === 'ph-scale') {
       if (!isPlaying) {
@@ -544,6 +506,9 @@
       }
     } else {
       stopTutorialLoop();
+      if (isPlaying) {
+        endGame();
+      }
     }
   }
 
@@ -568,17 +533,17 @@
       const name = arcadeInput.value.trim();
       if (name.length < 1) return;
       
-      btnSubmit.textContent = "Saving...";
+      btnSubmit.textContent = window.i18n.t('ph.saving');
       btnSubmit.disabled = true;
       
       await window.db.submitScore(name, score);
       
       arcadeEntry.style.display = 'none';
       btnStart.style.display = 'block';
-      btnStart.textContent = "Play Again!";
+      btnStart.textContent = window.i18n.t('ph.play_again');
       if (btnShowGuide) btnShowGuide.style.display = 'block';
       if (btnExitBlitzArcade) btnExitBlitzArcade.style.display = 'block';
-      btnSubmit.textContent = "Submit Score";
+      btnSubmit.textContent = window.i18n.t('ph.submit_score');
       btnSubmit.disabled = false;
       
       updateLeaderboardUI();

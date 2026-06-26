@@ -187,6 +187,10 @@
 }
 
 /* ── PAGE SECTION HEADER ──────────────────────────────────── */
+#page-home {
+  position: relative;
+}
+
 .heading-block {
   background: var(--bg-surface);
   border: 3px solid var(--ink);
@@ -198,6 +202,8 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .page-title {
@@ -242,19 +248,20 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--gap-md);
-  margin-bottom: var(--gap-xl);
+  margin-bottom: var(--gap-md);
 }
 
 .home-tool-card {
   background: var(--bg-raised);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   padding: var(--gap-md);
-  border: 3px solid var(--ink);
-  box-shadow: 4px 4px 0 var(--brine-muted);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--brine-muted);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  text-align: center;
+  text-align: left;
+  gap: var(--gap-md);
   cursor: pointer;
   transition: transform var(--t-bounce), box-shadow var(--t-bounce), background var(--t-fast);
 }
@@ -283,15 +290,16 @@
 
 .home-tool-card__title {
   font-family: var(--font-display);
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: var(--ink);
   margin-bottom: 4px;
 }
 
 .home-tool-card__desc {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-muted);
+  line-height: 1.4;
 }
 
 /* ── FOOTER ───────────────────────────────────────────────── */
@@ -344,3 +352,95 @@
 }
 
 .wisdom-box.is-fading { opacity: 0; }
+
+/* ── RESPONSIVE: FIT ON ANY PHONE SCREEN ─────────────────── */
+
+/* Compact header */
+.site-header {
+  padding: 0.6rem var(--gap-sm) 0.5rem;
+}
+
+.site-header__title {
+  font-size: 1.6rem;
+}
+
+.site-header__subtitle {
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+.marquee-container {
+  margin: -0.6rem -0.5rem 0.5rem -0.5rem;
+  padding: 2px 0;
+}
+
+/* Tighter page spacing */
+.pages-container {
+  padding: 0 var(--gap-sm) var(--gap-sm);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.page.is-active {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.page {
+  padding-top: var(--gap-sm);
+}
+
+/* Compact heading blocks on game pages */
+.heading-block {
+  padding: var(--gap-sm) var(--gap-md);
+  margin-bottom: var(--gap-sm);
+  box-shadow: 3px 3px 0 var(--brine-muted);
+}
+
+.page-title__graphic {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 8px;
+}
+
+.page-title__name {
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+}
+
+.page-title__desc {
+  font-size: 12px;
+}
+
+/* Compact footer */
+.site-footer {
+  padding: var(--gap-sm) var(--gap-md);
+  margin-top: var(--gap-sm);
+}
+
+/* Smaller nav */
+.tab-nav {
+  height: 60px;
+  padding: 4px 4px 6px;
+}
+
+:root {
+  --nav-height: 60px;
+}
+
+/* Small phone tweaks */
+@media (max-width: 360px) {
+  .site-header__title { font-size: 1.3rem; }
+  .home-tool-card__title { font-size: 1rem; }
+  .home-tool-card__desc { font-size: 10px; }
+  .page-title__name { font-size: 1.3rem; }
+}
+
+@media (max-height: 667px) {
+  .heading-block { padding: var(--gap-xs) var(--gap-sm); margin-bottom: var(--gap-xs); }
+  .page-title__graphic { width: 50px; height: 50px; }
+  .marquee-container { display: none; }
+}

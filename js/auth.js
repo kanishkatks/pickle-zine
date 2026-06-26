@@ -4,122 +4,141 @@
 ═══════════════════════════════════════════════════════════ */
 
 (function () {
-  // THE SECRET PASSWORD (all uppercase for easy matching)
-  // You can easily change this whenever you print a new zine!
   const SECRET_CODE = 'PICKLE2026';
-  
-  // DOM Refs
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DENIED_DISPLAY_MS = 3000;
+
+  let isDenying = false;
+  let failureCount = 0;
+  let hasTappedInput = false;
+
   const authGate = document.getElementById('auth-gate');
   const codeInput = document.getElementById('auth-code-input');
   const unlockBtn = document.getElementById('auth-unlock-btn');
   const errorMsg = document.getElementById('auth-error');
 
-  // Check if already unlocked from a previous visit
   if (localStorage.getItem('zine-unlocked') === 'true') {
     unlockApp(false);
   }
 
+  // ── Helpers ─────────────────────────────────────────────────
+  function showPiko(emotion, message) {
+    if (!hasTappedInput) {
+      hasTappedInput = true;
+      if (window.piko && window.piko.setContext) {
+        window.piko.setContext('auth-focus');
+      }
+    }
+    if (window.piko && window.piko.react) {
+      window.piko.react(emotion, Infinity, true);
+    }
+    if (message && window.piko && window.piko.speech) {
+      window.piko.speech(message, Infinity);
+    }
+  }
+
+  // ── Unlock ──────────────────────────────────────────────────
   function unlockApp(animate) {
     document.body.classList.remove('is-locked');
     if (animate) {
       authGate.classList.add('is-unlocked');
-      
-      // 1. Play Piko unlock cheer and speech bubble
-      if (window.piko && window.piko.react) {
-        window.piko.react('unlock', 2000);
-        window.piko.speech("ACCESS GRANTED! 🔓", 1800);
-      }
-
-      // Remove auth gate from DOM after fade out
       setTimeout(() => authGate.remove(), 500);
-      
-      // Track unlock in DB
       if (window.db) window.db.trackAppUnlock();
-      
-      // 2. Initiate guided welcome walkthrough drop-and-land sequence
-      setTimeout(() => {
-        if (window.piko && window.piko.startGuidedWalkthrough) {
-          window.piko.startGuidedWalkthrough();
-        }
-      }, 2000);
-      
+
+      // Show celebration modal, then start walkthrough
+      if (window.piko && window.piko.showCelebrationModal) {
+        window.piko.showCelebrationModal(() => {
+          if (window.piko && window.piko.startGuidedWalkthrough) {
+            window.piko.startGuidedWalkthrough();
+          }
+        });
+      }
     } else {
       authGate.remove();
     }
   }
 
+  // ── Attempt Unlock ──────────────────────────────────────────
   function attemptUnlock() {
+    if (isDenying) return;
+
     const enteredCode = codeInput.value.trim().toUpperCase();
-    
+
     if (enteredCode === SECRET_CODE) {
       errorMsg.style.display = 'none';
+      codeInput.disabled = true;
+      unlockBtn.disabled = true;
       localStorage.setItem('zine-unlocked', 'true');
       unlockApp(true);
-    } else {
-      // Wrong password — shake card
-      errorMsg.style.display = 'block';
-      authGate.querySelector('.auth-gate__content').classList.add('shake-anim');
-      setTimeout(() => {
-        authGate.querySelector('.auth-gate__content').classList.remove('shake-anim');
-      }, 400);
-
-      const pikoEl = document.getElementById('piko-reaction-container');
-      const authContent = authGate.querySelector('.auth-gate__content');
-      const unlockBtnEl = document.getElementById('auth-unlock-btn');
-
-      if (pikoEl) {
-        // Kill transition AND pop animation so he doesn't fly to the right
-        pikoEl.style.transition = 'none';
-        pikoEl.classList.remove('piko-pop');
-        document.body.appendChild(pikoEl);
-        pikoEl.classList.remove('piko-context-auth');
-        pikoEl.classList.add('piko-context-denied');
-      }
-
-      // Trigger denied reaction and speech bubble
-      if (window.piko && window.piko.react) {
-        window.piko.react('denied', 5000);
-        window.piko.speech("Access Denied! Check the zine! ❌", 5000);
-      }
-
-      // After 5 seconds, restore Piko back into the auth card sandwich
-      setTimeout(() => {
-        if (pikoEl && authContent && unlockBtnEl) {
-          pikoEl.style.transition = 'none';
-          pikoEl.style.transform = 'none';
-
-          pikoEl.classList.remove('piko-context-denied');
-          pikoEl.classList.add('piko-context-auth');
-          authContent.insertBefore(pikoEl, unlockBtnEl);
-          pikoEl.style.position = 'absolute';
-          errorMsg.style.display = 'none'; // Clear error message
-
-          if (window.piko && window.piko.react) {
-            window.piko.react('idle', Infinity);
-          }
-
-          // Re-enable transitions after paint settles (2 frames)
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            pikoEl.style.transition = '';
-            pikoEl.style.transform = '';
-          }));
-        }
-      }, 5200);
+      return;
     }
+
+    // Wrong password
+    isDenying = true;
+    failureCount++;
+    codeInput.disabled = true;
+    unlockBtn.disabled = true;
+
+    // Shake card
+    errorMsg.style.display = 'block';
+    const content = authGate.querySelector('.auth-gate__content');
+    content.classList.add('shake-anim');
+    setTimeout(() => content.classList.remove('shake-anim'), 400);
+
+    // Progressive feedback
+    let emotion = 'denied';
+    let message = window.i18n.t('auth.wrong_code');
+    if (failureCount >= 5) {
+      emotion = 'panic';
+      message = window.i18n.t('auth.panic');
+    } else if (failureCount >= 3) {
+      message = window.i18n.t('auth.hint');
+    }
+
+    showPiko(emotion, message);
+
+    // Re-enable after delay
+    setTimeout(() => {
+      errorMsg.style.display = 'none';
+      codeInput.disabled = false;
+      unlockBtn.disabled = false;
+      codeInput.value = '';
+      isDenying = false;
+
+      // Return to friendly
+      const PHRASES = [window.i18n.t('auth.retry_1'), window.i18n.t('auth.retry_2'), window.i18n.t('auth.retry_3')];
+      showPiko('intro', PHRASES[Math.floor(Math.random() * PHRASES.length)]);
+      codeInput.focus();
+    }, DENIED_DISPLAY_MS);
   }
 
-  // Events
+  // ── Events ──────────────────────────────────────────────────
   if (unlockBtn) {
     unlockBtn.addEventListener('click', attemptUnlock);
     unlockBtn.addEventListener('touchend', (e) => {
       e.preventDefault();
       attemptUnlock();
     });
+  }
+
+  if (codeInput) {
     codeInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') attemptUnlock();
     });
+
+    const FOCUS_PHRASES = [
+      window.i18n.t('auth.focus_1'),
+      window.i18n.t('auth.focus_2'),
+      window.i18n.t('auth.focus_3'),
+      window.i18n.t('auth.focus_4'),
+    ];
+
+    codeInput.addEventListener('focus', () => {
+      if (isDenying) return;
+      const msg = FOCUS_PHRASES[Math.floor(Math.random() * FOCUS_PHRASES.length)];
+      showPiko('intro', msg);
+    });
   }
 
-  // Expose globally as fallback for inline onclick
   window.attemptUnlock = attemptUnlock;
 })();

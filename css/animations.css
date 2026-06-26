@@ -218,15 +218,92 @@
   animation: pikoPop 0.4s cubic-bezier(0.25, 1, 0.5, 1) both;
 }
 
-/* ── PIKO AUTH GATE PEEK LOOP (Sandwiched) ────────────────── */
+/* ── PIKO AUTH GATE PEEK LOOP ──────────────────────────────── */
 @keyframes authPeekLoop {
-  0%, 15% { transform: translateY(160px) scale(2.0); } /* Hidden below */
-  35%, 65% { transform: translateY(22px) scale(2.0); } /* Peeking up as a solid block */
-  100% { transform: translateY(160px) scale(2.0); } /* Slides back down */
+  0%, 15% { transform: translateY(160px) scale(2.5); }
+  35%, 65% { transform: translateY(10px) scale(2.5) scaleY(0.8); }
+  100% { transform: translateY(160px) scale(2.5); }
 }
 
 .piko-context-auth img,
 .piko-context-auth video {
   transform-origin: top center;
   animation: authPeekLoop 4s infinite ease-in-out;
+}
+
+/* ── PIKO READING ANIMATION (gentle lean + nod) ──────────── */
+@keyframes pikoReading {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  20%      { transform: translateY(-2px) rotate(-3deg); }
+  40%      { transform: translateY(0) rotate(1deg); }
+  60%      { transform: translateY(-3px) rotate(-2deg); }
+  80%      { transform: translateY(-1px) rotate(2deg); }
+}
+
+.piko-reading {
+  transform-origin: bottom center;
+  animation: pikoReading 2.5s ease-in-out infinite;
+}
+
+@keyframes pikoHomeAlive {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%      { transform: translateY(-4px) rotate(2deg); }
+  50%      { transform: translateY(-2px) rotate(-1.5deg); }
+  75%      { transform: translateY(-3px) rotate(1deg); }
+}
+
+.piko-context-home img,
+.piko-context-home video {
+  transform-origin: bottom center;
+  animation: pikoHomeAlive 3s ease-in-out infinite;
+}
+
+/* ── PIKO AUTH FOCUS ENTRANCE ──────────────────────────────── */
+@keyframes pikoAuthSlideUp {
+  0%   { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── PIKO AUTH FOCUS IDLE SWAY ────────────────────────────── */
+@keyframes pikoAuthSway {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%      { transform: translateY(-3px) rotate(2deg); }
+  75%      { transform: translateY(-2px) rotate(-2deg); }
+}
+
+.piko-context-auth-focus img,
+.piko-context-auth-focus video {
+  transform-origin: bottom center;
+  animation: pikoAuthSlideUp 0.3s ease both,
+             pikoAuthSway 2s ease-in-out 0.3s infinite;
+}
+
+/* ── PIKO UNLOCK CELEBRATION ──────────────────────────────── */
+@keyframes pikoUnlockCelebrate {
+  0%   { transform: var(--piko-base-transform) scale(1) rotate(0deg); }
+  25%  { transform: var(--piko-base-transform) scale(1.3, 0.7) rotate(-10deg); }
+  50%  { transform: var(--piko-base-transform) scale(0.8, 1.2) rotate(8deg); }
+  75%  { transform: var(--piko-base-transform) scale(1.1, 0.9) rotate(-4deg); }
+  100% { transform: var(--piko-base-transform) scale(1) rotate(0deg); }
+}
+
+.piko-unlock-celebrate {
+  animation: pikoUnlockCelebrate 0.6s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+/* ── REDUCED MOTION ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .piko-context-auth img,
+  .piko-context-auth video,
+  .piko-context-auth-focus img,
+  .piko-context-auth-focus video {
+    animation: none !important;
+  }
+  .piko-pop,
+  .piko-land-bounce,
+  .piko-wave-puppet,
+  .piko-unlock-celebrate,
+  .shake-anim {
+    animation: none !important;
+  }
 }

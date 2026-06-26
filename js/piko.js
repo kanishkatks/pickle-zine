@@ -11,7 +11,6 @@
     celebrate: { type: 'img', src: 'assets/piko/celebrate.png' },
     fail: { type: 'video', src: 'assets/piko/fail.mp4' },
     win: { type: 'video', src: 'assets/piko/win.mp4' },
-    streak: { type: 'video', src: 'assets/piko/streak.mp4' },
     sour: { type: 'img', src: 'assets/piko/sour.png' },
     'extreme-sour': { type: 'img', src: 'assets/piko/extreme-sour.png' },
     'opposite-sour': { type: 'img', src: 'assets/piko/opposite-sour.png' },
@@ -52,7 +51,7 @@
     // Apply new context class
     container.classList.add(`piko-context-${contextName}`);
 
-    // Manage DOM position for sandwiching tricks
+    // Manage DOM position
     if (contextName === 'auth') {
       const authContent = document.querySelector('.auth-gate__content');
       const unlockBtn = document.getElementById('auth-unlock-btn');
@@ -60,15 +59,27 @@
         authContent.insertBefore(container, unlockBtn);
         container.style.position = 'absolute';
       }
+    } else if (contextName === 'auth-focus') {
+      const authGate = document.getElementById('auth-gate');
+      if (authGate) {
+        authGate.appendChild(container);
+        container.style.position = 'fixed';
+      }
+    } else if (contextName === 'home') {
+      const homeSpot = document.getElementById('piko-home-spot');
+      if (homeSpot && container.parentNode !== homeSpot) {
+        homeSpot.appendChild(container);
+        container.style.position = 'relative';
+      }
     } else {
       document.body.appendChild(container);
       container.style.position = 'fixed';
     }
   }
 
-  function react(emotion, duration = 3000) {
+  function react(emotion, duration = 3000, force = false) {
     if (!container || !ASSETS[emotion]) return;
-    if (currentEmotion === emotion && ASSETS[emotion].type !== 'video') return;
+    if (!force && currentEmotion === emotion && ASSETS[emotion].type !== 'video') return;
 
     // Trigger squash-and-stretch pop feedback animation
     container.classList.remove('piko-pop');
@@ -150,10 +161,12 @@
     
     // Trigger slide-in
     bubble.classList.add('is-active');
-    
+    document.dispatchEvent(new CustomEvent('piko:speaking', { detail: { active: true } }));
+
     if (duration !== Infinity) {
       bubble._timer = setTimeout(() => {
         bubble.classList.remove('is-active');
+        document.dispatchEvent(new CustomEvent('piko:speaking', { detail: { active: false } }));
       }, duration);
     }
   }
@@ -163,157 +176,258 @@
     if (bubble) {
       bubble.classList.remove('is-active');
       if (bubble._timer) clearTimeout(bubble._timer);
+      document.dispatchEvent(new CustomEvent('piko:speaking', { detail: { active: false } }));
     }
   }
 
-  // Interactive Guided App Walkthrough Loop
-  let currentStep = 0;
-  const STEPS = [
-    {
-      text: "Welcome to The Global Pickle Zine! I'm Piko, your brine buddy. 🥒 Let me show you around!",
-      tab: 'home',
-      btnText: 'Show me! 👉'
-    },
-    {
-      text: "This is the Hub! Check out your stats, view high scores, and unlock premium stickers.",
-      tab: 'home',
-      btnText: 'Next Game 🕹️'
-    },
-    {
-      text: "Tap the Vinegar bottle to play Whack-A-Mold! Save the fermentation jar from fuzzy spores. 🦠",
-      tab: 'vinegar',
-      btnText: 'Next Game ⚡'
-    },
-    {
-      text: "Tap the Bolt to play Sour Blitz! Test your chemistry knowledge on the pH sourness spectrum. 🧪",
-      tab: 'ph-scale',
-      btnText: 'Final Tip 💡'
-    },
-    {
-      text: "And click 'Reveal Brine Wisdom' anytime at the bottom to get fun facts! Let's get pickling! 📖",
-      tab: 'home',
-      btnText: 'Got it! 🥒'
+  // ── Celebration Modal ──────────────────────────────────────
+  function showCelebrationModal(callback) {
+    let modal = document.getElementById('piko-celebration-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'piko-celebration-modal';
+      modal.className = 'wisdom-modal-overlay';
+      modal.style.cursor = 'pointer';
+      modal.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:var(--gap-md);">
+          <img src="assets/piko/celebrate.png" style="width:200px; height:200px; object-fit:contain;" />
+          <div class="piko-speech-bubble" style="max-width:280px; font-size:1.4rem;">${window.i18n.t('auth.granted')}</div>
+          <div id="celebration-subtitle" style="color:var(--bg); font-family:var(--font-display); font-size:13px; opacity:0.8; margin-top:var(--gap-sm);">${window.i18n.t('walkthrough.tap_continue')}</div>
+        </div>
+      `;
+      document.body.appendChild(modal);
     }
-  ];
+
+    modal.classList.add('is-active');
+
+    function dismiss() {
+      modal.removeEventListener('click', dismiss);
+      modal.classList.remove('is-active');
+      setTimeout(() => {
+        modal.remove();
+        if (callback) callback();
+      }, 300);
+    }
+
+    // Tap to dismiss or auto-dismiss after 5s
+    modal.addEventListener('click', dismiss);
+    setTimeout(dismiss, 5000);
+  }
+
+  // ── Simplified Walkthrough (Full-screen modal style) ───────
+  let currentStep = 0;
+  let walkthroughModal = null;
+
+  function getSteps() {
+    return [
+      {
+        text: window.i18n.t('walkthrough.step1_text'),
+        tab: 'home',
+        img: 'assets/piko/intro.png',
+        btnText: window.i18n.t('walkthrough.step1_btn')
+      },
+      {
+        text: window.i18n.t('walkthrough.step2_text'),
+        tab: 'vinegar',
+        img: 'assets/piko/panic.png',
+        btnText: window.i18n.t('walkthrough.step2_btn')
+      },
+      {
+        text: window.i18n.t('walkthrough.step3_text'),
+        tab: 'ph-scale',
+        img: 'assets/piko/sour.png',
+        btnText: window.i18n.t('walkthrough.step3_btn')
+      },
+      {
+        text: window.i18n.t('walkthrough.step4_text'),
+        tab: 'home',
+        img: 'assets/piko/wisdom.png',
+        btnText: window.i18n.t('walkthrough.step4_btn')
+      }
+    ];
+  }
+
+  function getWalkthroughModal() {
+    if (!walkthroughModal) {
+      walkthroughModal = document.createElement('div');
+      walkthroughModal.id = 'piko-walkthrough-modal';
+      walkthroughModal.className = 'wisdom-modal-overlay';
+      document.body.appendChild(walkthroughModal);
+    }
+    return walkthroughModal;
+  }
 
   function showWalkthroughStep(index) {
+    const STEPS = getSteps();
     if (index >= STEPS.length) {
-      clearSpeech();
+      const modal = getWalkthroughModal();
+      modal.classList.remove('is-active');
+      setTimeout(() => modal.remove(), 300);
+      walkthroughModal = null;
+      window.walkthroughActive = false;
+      setContext('home');
       react('idle', Infinity);
       localStorage.setItem('zine-walkthrough-completed', 'true');
       return;
     }
-    
+
     currentStep = index;
     const step = STEPS[index];
-    
-    // Switch tabs programmatically
+    const isLast = index === STEPS.length - 1;
+
     window.location.hash = '#' + step.tab;
-    
-    // Let Piko glide first, then display speech bubble
-    setTimeout(() => {
-      react('intro', Infinity);
-      
-      const buttonsHTML = `
-        <button id="piko-wt-next" class="bttn-jelly bttn-xs custom-btn-relish neo-btn-shadow" style="font-weight:700; font-size:11px; padding:4px 10px; font-family:var(--font-display); width: auto;">
-          ${step.btnText}
-        </button>
-        ${index < STEPS.length - 1 ? `
-          <button id="piko-wt-skip" class="bttn-jelly bttn-xs custom-btn-wisdom neo-btn-shadow" style="font-weight:700; font-size:11px; padding:4px 10px; font-family:var(--font-display); background:#ececec; color:#222; border-color:#222; width: auto;">
-            Skip
+
+    const modal = getWalkthroughModal();
+    modal.innerHTML = `
+      <div style="display:flex; flex-direction:column; align-items:center; gap:var(--gap-md); padding:var(--gap-lg);">
+        <img src="${step.img}" style="width:180px; height:180px; object-fit:contain;" />
+        <div class="piko-speech-bubble" style="max-width:300px; font-size:15px;">${step.text}</div>
+        <div style="display:flex; gap:var(--gap-sm); pointer-events:auto;">
+          <button id="piko-wt-next" style="background:var(--relish); color:var(--bg); border:2px solid var(--ink); border-radius:var(--radius-md); padding:8px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; cursor:pointer; box-shadow:3px 3px 0 var(--ink);">
+            ${step.btnText}
           </button>
-        ` : ''}
-      `;
-      
-      speech(step.text, Infinity, buttonsHTML);
-      
-      // Bind action buttons after rendering
-      setTimeout(() => {
-        const nextBtn = document.getElementById('piko-wt-next');
-        const skipBtn = document.getElementById('piko-wt-skip');
-        
-        if (nextBtn) {
-          nextBtn.onclick = (e) => {
-            e.stopPropagation();
-            showWalkthroughStep(currentStep + 1);
-          };
-        }
-        if (skipBtn) {
-          skipBtn.onclick = (e) => {
-            e.stopPropagation();
-            clearSpeech();
-            react('idle', Infinity);
-            localStorage.setItem('zine-walkthrough-completed', 'true');
-          };
-        }
-      }, 50);
-    }, 450); // Match slide transition glide timing
+          ${!isLast ? `
+            <button id="piko-wt-skip" style="background:#ececec; color:#222; border:2px solid #222; border-radius:var(--radius-md); padding:8px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; cursor:pointer; box-shadow:3px 3px 0 #222;">
+              ${window.i18n.t('walkthrough.skip')}
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+
+    modal.classList.add('is-active');
+
+    setTimeout(() => {
+      const nextBtn = document.getElementById('piko-wt-next');
+      const skipBtn = document.getElementById('piko-wt-skip');
+      if (nextBtn) {
+        nextBtn.onclick = (e) => {
+          e.stopPropagation();
+          showWalkthroughStep(currentStep + 1);
+        };
+      }
+      if (skipBtn) {
+        skipBtn.onclick = (e) => {
+          e.stopPropagation();
+          const m = getWalkthroughModal();
+          m.classList.remove('is-active');
+          setTimeout(() => m.remove(), 300);
+          walkthroughModal = null;
+          window.walkthroughActive = false;
+          setContext('home');
+          react('idle', Infinity);
+          localStorage.setItem('zine-walkthrough-completed', 'true');
+        };
+      }
+    }, 50);
   }
 
   function startGuidedWalkthrough() {
-    clearSpeech();
-    
-    // 1. Initial drop-off sequence: Set to ceiling hang peek state first
+    window.walkthroughActive = true;
     setContext('home');
-    container.classList.add('piko-peek');
-    
-    setTimeout(() => {
-      // 2. Remove peek, apply physical land-bounce animation class
-      container.classList.remove('piko-peek');
-      container.classList.add('piko-land-bounce');
-      
-      // Play waving hello welcome
-      react('intro', Infinity);
-      
-      // 3. Clean up landing bounce utility class after execution
-      setTimeout(() => {
-        container.classList.remove('piko-land-bounce');
-        // Start showing the first dialogue bubble
-        showWalkthroughStep(0);
-      }, 950);
-    }, 600);
+    showWalkthroughStep(0);
   }
 
+  // Global Access
   function say(text, buttons = []) {
-    if (!text) {
-      clearSpeech();
-      return;
-    }
-    
-    // Generate HTML for buttons if any
+    if (!text) { clearSpeech(); return; }
     let buttonsHTML = '';
     if (buttons && buttons.length > 0) {
       buttons.forEach((btn, idx) => {
         const btnId = `piko-say-btn-${idx}`;
-        const isWisdom = btn.text.toLowerCase().includes('got it') || btn.text.toLowerCase().includes('next');
-        const btnClass = isWisdom ? 'custom-btn-wisdom' : 'custom-btn-relish';
         buttonsHTML += `
-          <button id="${btnId}" class="bttn-jelly bttn-xs ${btnClass} neo-btn-shadow" style="font-weight:700; font-size:11px; padding:4px 10px; font-family:var(--font-display); width: auto; margin: 4px;">
+          <button id="${btnId}" style="background:var(--relish); color:var(--bg); border:2px solid var(--ink); border-radius:var(--radius-md); padding:4px 12px; font-family:var(--font-display); font-weight:700; font-size:11px; cursor:pointer; box-shadow:3px 3px 0 var(--ink); margin:4px;">
             ${btn.text}
           </button>
         `;
       });
     }
-
     speech(text, Infinity, buttonsHTML);
-
     if (buttons && buttons.length > 0) {
       setTimeout(() => {
         buttons.forEach((btn, idx) => {
           const btnEl = document.getElementById(`piko-say-btn-${idx}`);
           if (btnEl) {
-            btnEl.onclick = (e) => {
-              e.stopPropagation();
-              if (btn.action) btn.action();
-            };
+            btnEl.onclick = (e) => { e.stopPropagation(); if (btn.action) btn.action(); };
           }
         });
       }, 50);
     }
   }
 
-  // Global Access
-  window.piko = { react, setContext, speech, clearSpeech, startGuidedWalkthrough, say };
+  // ── Tutorial Cards (reusable modal card sequence) ─────────
+  function showTutorialCards(cards, onComplete) {
+    let tutModal = document.getElementById('piko-tutorial-cards-modal');
+    let stepIdx = 0;
+
+    function renderStep() {
+      const card = cards[stepIdx];
+      const isLast = stepIdx === cards.length - 1;
+
+      if (!tutModal) {
+        tutModal = document.createElement('div');
+        tutModal.id = 'piko-tutorial-cards-modal';
+        tutModal.className = 'wisdom-modal-overlay';
+        document.body.appendChild(tutModal);
+      }
+
+      tutModal.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:var(--gap-sm); padding:var(--gap-lg); max-width:340px;">
+          <img src="${card.img}" class="piko-modal-img ${card.imgClass || ''}" style="width:${card.imgSize || 150}px; height:${card.imgSize || 150}px; object-fit:contain;" />
+          <div class="piko-speech-bubble" style="max-width:300px; font-size:14px;">${card.text}</div>
+          ${card.items ? `<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:var(--gap-xs) 0;">${card.items.map(item =>
+            `<div style="background:var(--bg-surface); border:2px solid var(--ink); border-radius:var(--radius-md); padding:4px 8px; font-size:12px; font-weight:700; box-shadow:2px 2px 0 var(--ink);">${item}</div>`
+          ).join('')}</div>` : ''}
+          <div style="display:flex; gap:8px; pointer-events:auto;">
+            <button id="piko-tut-card-next" style="background:var(--relish); color:var(--bg); border:2px solid var(--ink); border-radius:var(--radius-md); padding:8px 20px; font-family:var(--font-display); font-weight:700; font-size:14px; cursor:pointer; box-shadow:3px 3px 0 var(--ink);">
+              ${card.btnText}
+            </button>
+            ${card.secondaryBtnText ? `<button id="piko-tut-card-skip" style="background:var(--bg-raised); color:var(--ink-muted); border:2px solid var(--ink-muted); border-radius:var(--radius-md); padding:8px 16px; font-family:var(--font-display); font-weight:700; font-size:13px; cursor:pointer; box-shadow:2px 2px 0 var(--brine-muted);">
+              ${card.secondaryBtnText}
+            </button>` : ''}
+          </div>
+        </div>
+      `;
+
+      tutModal.classList.add('is-active');
+
+      setTimeout(() => {
+        const btn = document.getElementById('piko-tut-card-next');
+        const skipBtn = document.getElementById('piko-tut-card-skip');
+        if (skipBtn) {
+          skipBtn.onclick = (e) => {
+            e.stopPropagation();
+            tutModal.classList.remove('is-active');
+            setTimeout(() => {
+              tutModal.remove();
+              tutModal = null;
+              // Don't call onComplete — just close
+            }, 300);
+          };
+        }
+        if (btn) {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            stepIdx++;
+            if (stepIdx >= cards.length) {
+              tutModal.classList.remove('is-active');
+              setTimeout(() => {
+                tutModal.remove();
+                tutModal = null;
+                if (onComplete) onComplete();
+              }, 300);
+            } else {
+              renderStep();
+            }
+          };
+        }
+      }, 50);
+    }
+
+    renderStep();
+  }
+
+  window.piko = { react, setContext, speech, clearSpeech, startGuidedWalkthrough, showCelebrationModal, showTutorialCards, say };
 
   // Initial boot coordinate selector
   window.addEventListener('load', () => {
@@ -331,9 +445,8 @@
       if (!isWalkthroughDone) {
         startGuidedWalkthrough();
       } else {
-        // Direct land sitting on Home Hub banner perch
         setContext('home');
-        react('idle', Infinity);
+        react('intro', Infinity);
       }
     }
   });
